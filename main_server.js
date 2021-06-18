@@ -13,6 +13,12 @@ var debug = fs.createWriteStream('./!logs/errors.log');
 process.stdout.write = debug.write.bind(debug);
 
 app.use(cookieParser());
+app.use(express.static('html'));
+app.use(express.static('css'));
+app.use(express.static('javascript'));
+app.use(express.static('images'));
+
+var Rooms = [];
 
 
 
