@@ -18,9 +18,37 @@ app.use(express.static('css'));
 app.use(express.static('javascript'));
 app.use(express.static('images'));
 
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
+
 var Rooms = [];
 
+io.on('connection', (socket) => {
+    try {
+        console.log(`${socket.handshake.query.name} connected. id: ${socket.id}`);
+    }
+    catch (err) {
+        console.log(err);
+    }
 
+    socket.on('disconnect', () => {
+        try {
+            console.log(`${socket.handshake.query.name} disconnected`);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    });
+
+    socket.on('message', function (msg) {
+        try {
+        }
+        catch (err) {
+            console.log(err);
+        }
+    });
+});
 
 server.listen(3000, () => {
     console.log('listening on *:3000');
