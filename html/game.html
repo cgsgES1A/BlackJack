@@ -13,7 +13,7 @@
             var deck = document.getElementById("axis");
             let img = document.createElement("img");
             img.id = (num_of_token_cards + 1).toString();
-            img.src = "https://media2.24aul.ru/imgs/5b88ee7f5c0b7a0001d5bb18/igralnye-karty-bee-92-krasnaya-rubashka-2-12034284.jpg";
+            img.src = "https://i.pinimg.com/originals/dc/41/11/dc4111c593c3a31944f9fc503ed46dbf.png";
             img.className = "object card";
             img.width = 100;
             deck.appendChild(img);
@@ -27,6 +27,12 @@
     </script>
 
     <style>
+        body {
+            background-image: url("/table.jpg");
+            background-size: 100% 100%;
+
+        }
+
         .object {
             position: absolute;
             transition: all 2s ease-in-out;
@@ -101,12 +107,10 @@
     <p> Fig znaet, chto tut budet... </p>
     <br>
     <button id="axis" onclick="take_card();"> Жмакни сюды
-        <img class="object card"
-            src="https://media2.24aul.ru/imgs/5b88ee7f5c0b7a0001d5bb18/igralnye-karty-bee-92-krasnaya-rubashka-2-12034284.jpg"
+        <img class="object card" src="https://i.pinimg.com/originals/dc/41/11/dc4111c593c3a31944f9fc503ed46dbf.png"
             width=100px />
         <img id="1" class="object card"
-            src="https://media2.24aul.ru/imgs/5b88ee7f5c0b7a0001d5bb18/igralnye-karty-bee-92-krasnaya-rubashka-2-12034284.jpg"
-            width=100px />
+            src="https://i.pinimg.com/originals/dc/41/11/dc4111c593c3a31944f9fc503ed46dbf.png" width=100px />
     </button>
 </body>
 
