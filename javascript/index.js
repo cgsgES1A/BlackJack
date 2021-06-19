@@ -1,29 +1,11 @@
 import _ from 'lodash'
 import * as $ from 'jquery';
 
-$.getElementById("#user_logup_button").addEventListener("onclick", logupUser());
-$.getElementById("#user_login_button").addEventListener("onclick", loginUser());
-$.getElementById("#room_logup_button").addEventListener("onclick", logupRoom());
-$.getElementById("#room_login_button").addEventListener("onclick", loginRoom());
-
-function setCookie(name, value) {
-    $.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);;
-}
-
-function getCookie(name) {
-    let matches = $.cookie.match(new RegExp(
-        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-    ));
-    return matches ? decodeURIComponent(matches[1]) : undefined;
-}
-
 function logupUser() {
     let name = $("#input_name").value;
     let password = $("#input_password").value;
 
     if (name && password && name.length > 0 && password.length > 0) {
-        setCookie('userName', name);
-        setCookie('userPassword', password);
         fetch('/signup', {
             method: 'POST',
             body: JSON.stringify({ name: name, password: password }),
@@ -39,11 +21,9 @@ function loginUser() {
     let isOkName = true, isOkPassword = true;
 
     if (!name || name.length == 0)
-        if (!(name = getCookie("userName")))
-            isOkName = false;
+        isOkName = false;
     if (!password || password.length == 0)
-        if (!(password = getCookie("userPassword")))
-            isOkPassword = false;
+        isOkPassword = false;
 
     if (!isOkName || !isOkPassword)
         alert("Input user data to login");
@@ -67,3 +47,12 @@ function loginRoom() {
     if (!roomId || roomId.length == 0)
         alert("Input room data to log in room");
 }
+
+function onLoad() {
+    $("#user_logup_button").on("click", () => { logupUser(); });
+    $("#user_login_button").on("click", () => { loginUser(); });
+    $("#room_logup_button").on("click", () => { logupRoom(); });
+    $("#room_login_button").on("click", () => { loginRoom(); });
+}
+
+$(onLoad)
