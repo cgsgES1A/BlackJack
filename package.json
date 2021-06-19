@@ -11,7 +11,9 @@
     "webpack": "^5.39.1",
     "webpack-cli": "^4.7.2",
     "socket.io-client": "^4.1.2",
-    "mongodb": "^3.6.9"
+    "mongodb": "^3.6.9",
+    "jquery": "^3.6.0",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "mongodb": "^3.6.9"
