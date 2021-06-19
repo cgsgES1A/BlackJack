@@ -9,7 +9,7 @@ function logupUser() {
     let name = $("#input_name").value;
     let password = $("#input_password").value;
 
-    if (name && password && name.length > 0 && password.length > 0) {
+    if (!(name == null) && !(password == null) && !(name == undefined) && !(password == undefined) && name.length > 0 && password.length > 0) {
         fetch('/signup', {
             method: 'POST',
             body: JSON.stringify({ name: name, password: password }),
