@@ -18,7 +18,7 @@ function logupUser() {
     let name = $("#input_name").value;
     let password = $("#input_password").value;
 
-    if (name && password) {
+    if (name && password && name.length > 0 && password.length > 0) {
         setCookie('userName', name);
         setCookie('userPassword', password);
         fetch('/signup', {
@@ -35,10 +35,10 @@ function loginUser() {
     let password = $("#input_password").value;
     let isOkName = true, isOkPassword = true;
 
-    if (!name)
+    if (!name || name.length == 0)
         if (!(name = getCookie("userName")))
             isOkName = false;
-    if (!password)
+    if (!password || password.length == 0)
         if (!(password = getCookie("userPassword")))
             isOkPassword = false;
 
@@ -54,13 +54,13 @@ function loginUser() {
 function logupRoom() {
     let roomId = $("#input_room_id").value;
 
-    if (!roomId)
+    if (!roomId || roomId.length == 0)
         alert("Input room data to logup new room");
 }
 
 function loginRoom() {
     let roomId = $("#input_room_id").value;
 
-    if (!roomId)
+    if (!roomId || roomId.length == 0)
         alert("Input room data to log in room");
 }
