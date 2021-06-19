@@ -15,7 +15,7 @@ function logupUser() {
             body: JSON.stringify({ name: name, password: password }),
         });
         Cookies.set('userName', name);
-        Cookies.get('userPassword', password);
+        Cookies.set('userPassword', password);
     }
     else
         alert("Input user data to logup");
