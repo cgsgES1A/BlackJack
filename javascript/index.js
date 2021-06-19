@@ -6,8 +6,8 @@ const Cookies = require('js-cookie');
 let userName = null;
 
 function logupUser() {
-    let name = $("#input_name").value;
-    let password = $("#input_password").value;
+    let name = $("#input_name").val();
+    let password = $("#input_password").val();
 
     if (!(name == null) && !(password == null) && !(name == undefined) && !(password == undefined) && name.length > 0 && password.length > 0) {
         fetch('/signup', {
@@ -22,14 +22,14 @@ function logupUser() {
 }
 
 function loginUser() {
-    let name = $("#input_name").value;
-    let password = $("#input_password").value;
+    let name = $("#input_name").val();
+    let password = $("#input_password").val();
     let isOkName = true, isOkPassword = true;
 
-    if (!name || name.length == 0)
+    if (name == null || name == undefined || name.length == 0)
         if (!Cookies.get('userName'))
             isOkName = false;
-    if (!password || password.length == 0)
+    if (password == null || password == undefined || password.length == 0)
         if (!Cookies.get('userPassword'))
             isOkPassword = false;
 
@@ -69,9 +69,9 @@ function logupRoom() {
 }
 
 function loginRoom() {
-    let tmpRoomId = $("#input_room_id").value;
+    let tmpRoomId = $("#input_room_id").val();
 
-    if (!tmpRoomId || tmpRoomId.length == 0)
+    if (tmpRoomId == null || tmpRoomId == undefined || tmpRoomId.length == 0)
         alert("Input room data to log in room");
     else {
         roomId = tmpRoomId;
