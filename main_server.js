@@ -198,10 +198,10 @@ class Room {
 }
 
 app.use(cookieParser());
-app.use(express.static('html'));
-app.use(express.static('css'));
-app.use(express.static('javascript'));
-app.use(express.static('images'));
+app.use(express.static(__dirname + '/html'));
+app.use(express.static(__dirname + '/css'));
+app.use(express.static(__dirname + '/javascript'));
+app.use(express.static(__dirname + '/images'));
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
