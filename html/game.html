@@ -2,10 +2,38 @@
 
 <head>
     <title>Black Jack, play</title>
+
+    <style>
+        .object {
+            position: absolute;
+            -webkit-transition: all 2s ease-in-out;
+            -moz-transition: all 2s ease-in-out;
+            -o-transition: all 2s ease-in-out;
+        }
+
+        .card {
+            top: 42%;
+            left: 43%;
+        }
+
+        #axis:focus .multiple {
+            transform: translate(350px, -350px) rotate(360deg) scale(0.5);
+            -webkit-transform: translate(350px, -350px) rotate(360deg) scale(0.5);
+            -o-transform: translate(350px, -350px) rotate(360deg) scale(0.5);
+            -moz-transform: translate(350px, -350px) rotate(360deg) scale(0.5);
+        }
+    </style>
+
 </head>
 
 <body>
     <p> Hren znaet, chto tut budet... </p>
+    <br><br>
+    <button id="axis"> Жмакни сюды
+        <img class="object card multiple"
+            src="https://media2.24aul.ru/imgs/5b88ee7f5c0b7a0001d5bb18/igralnye-karty-bee-92-krasnaya-rubashka-2-12034284.jpg"
+            width=100px />
+    </button>
 </body>
 
 </html>
