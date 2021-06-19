@@ -1,3 +1,8 @@
+$("#user_logup_button").addEventListener("onclick", logupUser());
+$("#user_login_button").addEventListener("onclick", loginUser());
+$("#room_logup_button").addEventListener("onclick", logupRoom());
+$("#room_login_button").addEventListener("onclick", loginRoom());
+
 function setCookie(name, value) {
     document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);;
 }
@@ -9,26 +14,25 @@ function getCookie(name) {
     return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
-function registerUser() {
-    let name = document.getElementById("input_name").value;
-    let password = document.getElementById("input_password").value;
+function logupUser() {
+    let name = $("#input_name").value;
+    let password = $("#input_password").value;
 
     if (name && password) {
         setCookie('userName', name);
         setCookie('userPassword', password);
-        fetch('/', {
+        fetch('/signup', {
             method: 'POST',
-            body: `${name}&${password}`,
-            keepalive: true
+            body: JSON.stringify({ name: name, password: password }),
         });
     }
     else
-        alert("�� �� ����� ������ ��� ����������� ������������, ���������� ��� ���");
+        alert("Input user data to logup");
 }
 
 function loginUser() {
-    let name = document.getElementById("input_name").value;
-    let password = document.getElementById("input_password").value;
+    let name = $("#input_name").value;
+    let password = $("#input_password").value;
     let isOkName = true, isOkPassword = true;
 
     if (!name)
@@ -39,31 +43,24 @@ function loginUser() {
             isOkPassword = false;
 
     if (!isOkName || !isOkPassword)
-        alert("������������ ������ ��� �����");
+        alert("Input user data to login");
     else
-        fetch('/', {
+        fetch('/login', {
             method: 'POST',
-            body: `${name}&${password}`,
-            keepalive: true
+            body: JSON.stringify({ name: name, password: password }),
         });
 }
 
-function registerRoom() {
-    let roomId = document.getElementById("#input_room_id").value;
+function logupRoom() {
+    let roomId = $("#input_room_id").value;
 
     if (!roomId)
-        alert("������� ������������� �������");
+        alert("Input room data to logup new room");
 }
 
 function loginRoom() {
-    let roomId = document.getElementById("#input_room_id").value;
+    let roomId = $("#input_room_id").value;
 
     if (!roomId)
-        alert("������� ������������� �������");
-    else
-        fetch('/', {
-            method: 'POST',
-            body: `${roomId}`,
-            keepalive: true
-        });
+        alert("Input room data to log in room");
 }
