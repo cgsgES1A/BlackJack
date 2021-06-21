@@ -6,6 +6,7 @@ const fs = require('fs');
 const cookieParser = require('cookie-parser');
 const { randomInt } = require('crypto');
 const MongoClient = require('mongodb').MongoClient;
+const bcrypt = require("bcrypt");
 const MongoConnectionURL = "mongodb+srv://SumPracticeProjectBlackJack:PML_30_CGSG_FOREVER@main.sx78q.mongodb.net/Main?retryWrites=true&w=majority";
 
 const server = http.createServer(app);
@@ -46,6 +47,26 @@ function getNextID() {
     __CurID += 1;
 
     return __CurID;
+}
+
+function Encrypt(data) {
+    try {
+        const salt = bcrypt.genSaltSync(4);
+        return (bcrypt.hashSync(data, salt)).toString("hex");
+    }
+    catch (err) {
+        console.log(err);
+        return 0;
+    }
+}
+
+function CheckEncrypted(data, encrypted) {
+    try {
+        return bcrypt.compareSync(data, encrypted);
+    }
+    catch (err) {
+        return false;
+    }
 }
 
 const Cards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11];
@@ -399,16 +420,22 @@ async function CheckLogin(name, pass) {
         return false;
     }
 
-    let user = await collection.findOne({ name: name });
+    try {
+        let user = await collection.findOne({ name: name });
 
-    if (user == null) {
-        return false;
-    }
+        if (user == null) {
+            return false;
+        }
 
-    if (user.pass == pass) {
-        return true;
+        if (CheckEncrypted(pass, user.pass)) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
-    else {
+    catch (err) {
+        console.error(err);
         return false;
     }
 }
@@ -418,12 +445,12 @@ async function AddUser(name, pass) {
         return false;
     }
 
-    if (!(await collection.findOne({ name: name }) == null)) {
-        return false;
-    }
-
     try {
-        collection.insertOne({ name: name, pass: pass });
+        if (!(await collection.findOne({ name: name }) == null)) {
+            return false;
+        }
+
+        collection.insertOne({ name: name, pass: Encrypt(pass) });
         return true;
     }
     catch (err) {
