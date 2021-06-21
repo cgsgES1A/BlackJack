@@ -293,14 +293,19 @@ async function AddUser(name, pass) {
         return false;
     }
 
+    if (!(await collection.findOne({ name: name }) == null)) {
+        return false;
+    }
+
     try {
         collection.insertOne({ name: name, pass: pass });
         return true;
     }
     catch (err) {
         console.error(err);
-        return false;
     }
+
+    return false;
 }
 
 app.post('/login', (req, res) => {
