@@ -8,18 +8,34 @@
     <script type="text/javascript">
         var num_of_token_cards = 0;
         var iter = 1;
-        var num_of_open_cards = 0;
+        var num_of_open_cards = 1;
         var deck;
+        var max_token_card = 127;
+        var opened_card = 0;
 
         function open_card() {
+            /*deck = document.getElementById("axis");
+            num_of_open_cards++;
+            let img = document.createElement("img");
+            img.id = 'oc' + (num_of_open_cards).toString();
+            img.src = "/card_sample.jpg";
+            img.className = "object user_card";
+            img.width = 100;
+            deck.appendChild(img);
+            var ImgClasses = document.getElementById('oc' + (num_of_open_cards).toString()).classList;
+            ImgClasses.add("multiple_temp");
+        */
             deck = document.getElementById("axis");
             num_of_open_cards++;
             let img = document.createElement("img");
-            img.id = (num_of_open_cards).toString();
+            img.id = "oc" + (max_token_card + num_of_open_cards + 1).toString();
             img.src = "/card_sample.jpg";
-            img.className = "object user_card multiple_temp";
-            img.width = 120;
+            img.className = "object user_card";
+            img.width = 100;
             deck.appendChild(img);
+            var ImgClasses = document.getElementById("oc" + (max_token_card + num_of_open_cards).toString()).classList;
+            ImgClasses.add("multiple_temp");
+            document.getElementById(opened_card).remove();
         }
 
         function take_card() {
@@ -33,14 +49,15 @@
             deck.appendChild(img);
             var ImgClasses = document.getElementById(num_of_token_cards).classList;
             var class_type = "multiple" + iter.toString();
-            /*
-            if (iter == 1)
-                open_card();
-            */
+            ImgClasses.add(class_type);
+            if (iter == 1) {
+                opened_card = num_of_token_cards;
+                setTimeout(open_card, 2000);
+            }
+
             iter++;
             if (iter == 7)
                 iter = 1;
-            ImgClasses.add(class_type);
         }
     </script>
 
@@ -71,11 +88,11 @@
 
         .multiple_temp {
             top: 80%;
-            left: 35%;
-            transform: rotate(180deg) scale(1.5);
-            -webkit-transform: rotate(180deg) scale(1.5);
-            -o-transform: rotate(180deg) scale(1.5);
-            -moz-transform: rotate(180deg) scale(1.5);
+            left: 30%;
+            transform: scale(1.5);
+            -webkit-transform: scale(1.5);
+            -o-transform: scale(1.5);
+            -moz-transform: scale(1.5);
         }
 
         .multiple1 {
@@ -141,6 +158,8 @@
     <button id="axis" onclick="take_card();"> Жмакни сюды
         <img class="object card" src="/card_shirt.png" width=120px />
         <img id="1" class="object card" src="/card_shirt.png" width=120px />
+        <img id="oc128" />
+        <img id="oc129" />
     </button>
 </body>
 
