@@ -8,25 +8,66 @@
     <script type="text/javascript">
         var num_of_token_cards = 0;
         var iter = 1;
+        var num_of_open_cards = 1;
+        var deck;
+        var max_token_card = 127;
+        var opened_card = 0;
+
+        function open_card() {
+            /*deck = document.getElementById("axis");
+            num_of_open_cards++;
+            let img = document.createElement("img");
+            img.id = 'oc' + (num_of_open_cards).toString();
+            img.src = "/card_sample.jpg";
+            img.className = "object user_card";
+            img.width = 100;
+            deck.appendChild(img);
+            var ImgClasses = document.getElementById('oc' + (num_of_open_cards).toString()).classList;
+            ImgClasses.add("multiple_temp");
+        */
+            deck = document.getElementById("axis");
+            num_of_open_cards++;
+            let img = document.createElement("img");
+            img.id = "oc" + (max_token_card + num_of_open_cards + 1).toString();
+            img.src = "/card_sample.jpg";
+            img.className = "object user_card";
+            img.width = 100;
+            deck.appendChild(img);
+            var ImgClasses = document.getElementById("oc" + (max_token_card + num_of_open_cards).toString()).classList;
+            ImgClasses.add("multiple_temp");
+            document.getElementById(opened_card).remove();
+        }
+
         function take_card() {
+            deck = document.getElementById("axis");
             num_of_token_cards++;
-            var deck = document.getElementById("axis");
             let img = document.createElement("img");
             img.id = (num_of_token_cards + 1).toString();
-            img.src = "https://media2.24aul.ru/imgs/5b88ee7f5c0b7a0001d5bb18/igralnye-karty-bee-92-krasnaya-rubashka-2-12034284.jpg";
+            img.src = "/card_shirt.png";
             img.className = "object card";
-            img.width = 100;
+            img.width = 120;
             deck.appendChild(img);
             var ImgClasses = document.getElementById(num_of_token_cards).classList;
             var class_type = "multiple" + iter.toString();
+            ImgClasses.add(class_type);
+            if (iter == 1) {
+                opened_card = num_of_token_cards;
+                setTimeout(open_card, 2000);
+            }
+
             iter++;
             if (iter == 7)
                 iter = 1;
-            ImgClasses.add(class_type);
         }
     </script>
 
     <style>
+        body {
+            background-image: url("/table.jpg");
+            background-size: 100% 100%;
+
+        }
+
         .object {
             position: absolute;
             transition: all 2s ease-in-out;
@@ -38,6 +79,20 @@
         .card {
             top: 42%;
             left: 43%;
+        }
+
+        .user_card {
+            top: 80%;
+            left: 5%;
+        }
+
+        .multiple_temp {
+            top: 80%;
+            left: 30%;
+            transform: scale(1.5);
+            -webkit-transform: scale(1.5);
+            -o-transform: scale(1.5);
+            -moz-transform: scale(1.5);
         }
 
         .multiple1 {
@@ -101,12 +156,10 @@
     <p> Fig znaet, chto tut budet... </p>
     <br>
     <button id="axis" onclick="take_card();"> Жмакни сюды
-        <img class="object card"
-            src="https://media2.24aul.ru/imgs/5b88ee7f5c0b7a0001d5bb18/igralnye-karty-bee-92-krasnaya-rubashka-2-12034284.jpg"
-            width=100px />
-        <img id="1" class="object card"
-            src="https://media2.24aul.ru/imgs/5b88ee7f5c0b7a0001d5bb18/igralnye-karty-bee-92-krasnaya-rubashka-2-12034284.jpg"
-            width=100px />
+        <img class="object card" src="/card_shirt.png" width=120px />
+        <img id="1" class="object card" src="/card_shirt.png" width=120px />
+        <img id="oc128" />
+        <img id="oc129" />
     </button>
 </body>
 
