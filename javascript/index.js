@@ -3,8 +3,6 @@ import * as $ from 'jquery';
 import { io, Socket } from 'socket.io-client';
 const Cookies = require('js-cookie');
 
-let userName = null;
-
 function logupUser() {
     let name = $("#input_name").val();
     let password = $("#input_password").val();
@@ -55,8 +53,23 @@ function loginUser() {
         fetch('/login', {
             method: 'POST',
             body: JSON.stringify({ name: name, password: password }),
-        });
-        userName = name;
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Response status is: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(text => {
+                let newHTML;
+
+                if (text == "true") {
+                    newHTML = "<button id='room_logup_button' onclick='window.location.href = '/game.html';'>Create new room</button><br><label for='input_room_id'>Room id</label> <input type='text' id='input_room_id'><br><button id='room_login_button' onclick='window.location.href = '/game.html';'>Join room</button>'";
+                    $("body").html(newHTML);
+                }
+                else
+                    alert("Failed to login user");
+            });
     }
 }
 
@@ -75,7 +88,7 @@ function logupRoom() {
         .then(text => {
             let tmpRoomId = text;
 
-            if (!tmpRoomId)
+            if (tmpRoomId == null || tmpRoomId == undefined || tmpRoomId.length == 0)
                 alert("Error in room logup");
             else {
                 roomId = tmpRoomId;
@@ -96,7 +109,7 @@ function loginRoom() {
 }
 
 function roomSession() {
-    if (!roomId || roomId.length == 0) {
+    if (roomId == null || roomId == undefined || roomId.length == 0) {
         alert("Error in room connection (wrong id)");
         return;
     }
