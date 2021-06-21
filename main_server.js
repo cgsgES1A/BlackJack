@@ -40,6 +40,14 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
+var __CurID = randomInt(4294967296.0);
+
+function getNextID() {
+    __CurID += 1;
+
+    return __CurID;
+}
+
 const Cards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11];
 
 var rooms = [];
@@ -142,6 +150,10 @@ class User {
             console.error(err);
         }
     }
+
+    get_socket() {
+        return this.socket;
+    }
 }
 
 class Room {
@@ -149,6 +161,7 @@ class Room {
     users = [-1, -1, -1, -1, -1];
     dealer = null;
     step = 0;
+    users_amount = 0;
     curuser = -1;
 
     getid() {
@@ -174,6 +187,14 @@ class Room {
         while (i < 5) {
             if (this.users[i] == -1) {
                 this.users[i] = new User(id);
+                let socket = this.users[i].get_socket();
+                this.users[i].socket_get('start game', () => {
+                    this.start_game();
+                });
+                this.users[i].socket_get('disconnect', () => {
+                    this.deluser(socket.id);
+                    SocketStdDisconnect(socket);
+                });
                 return true;
             }
             i += 1;
@@ -187,6 +208,7 @@ class Room {
 
         while (i < 5) {
             if (this.users[i] != 0 & this.users[i].isit(id)) {
+                this.users[i].socket_default();
                 this.users[i] = 0;
                 return true;
             }
@@ -194,6 +216,106 @@ class Room {
         }
 
         return false;
+    }
+
+    deluser_i(i) {
+        if (this.users[i] != 0) {
+            try {
+                this.users[i].socket_default();
+                this.users[i] = 0;
+                return true;
+            }
+            catch (err) {
+                console.error(err);
+            }
+        }
+
+        return false;
+    }
+
+    start_game() {
+        if (this.step != 0) {
+            return;
+        }
+
+        this.step = 1;
+        let i = 0, j = 0;
+        let new_list = [0, 0, 0, 0, 0];
+
+        while (i < 5) {
+            if (!(this.users[i] == 0)) {
+                new_list[j] = this.users[i];
+                j += 1;
+            }
+            i += 1;
+        }
+
+        this.users = new_list;
+        this.users_amount = j;
+
+        if (this.users_amount == 0) {
+            console.error("Unexpected error!");
+            this.delroom();
+            return;
+        }
+
+        this.curuser = -1;
+    }
+
+    next_user() {
+        if (this.curuser >= 0) {
+            this.users[this.curuser].socket_get('take card', () => { });
+            this.users[this.curuser].socket_get('end step', () => { });
+            this.users[this.curuser].socket_send('end step', 0);
+        }
+
+        this.curuser += 1;
+        if (this.curuser >= this.users_amount) {
+            this.step = 2;
+            return;
+        }
+
+        let i = this.curuser;
+
+        this.users[i].socket_get('take card', () => {
+            let k = Cards[getRandomInt(Cards.length)];
+            this.users[i].socket_send('take card', k);
+
+            if (this.users[i].addcard(k) == false) {
+                this.users[i].socket_send('end step', 0);
+                this.next_uset_if(i);
+            }
+        });
+        this.users[this.curuser].socket_get('end step', () => {
+            this.next_uset_if(i);
+        });
+        this.users[i].socket_send('start step', 0);
+    }
+
+    next_uset_if(i) {
+        if (this.step == 1 & this.curuser == i) {
+            this.next_user();
+        }
+    }
+
+    delroom() {
+        step = -1;
+        this.users_amount = 0;
+    }
+
+    send_all(msg_type, msg) {
+        let i = 0;
+
+        try {
+            while (i < 5) {
+                if (!(this.users[1] == 0)) {
+                    this.users[1].socket_send(msg_type, msg);
+                }
+            }
+        }
+        catch (err) {
+            console.error(err);
+        }
     }
 }
 
@@ -209,7 +331,7 @@ app.get('/', (req, res) => {
 
 app.get('/create_room', function (req, res) {
     res.writeHead(200);
-    let room = new Room(randomInt(4294967296.0));
+    let room = new Room(getNextID());
     rooms.push(room);
     res.end(room.getid().toString());
 });
@@ -221,6 +343,7 @@ io.on('connection', (socket) => {
     catch (err) {
         console.log("Error");
         console.error(err);
+        socket.emit("entersuccessful", false);
         return;
     }
 
@@ -231,6 +354,7 @@ io.on('connection', (socket) => {
         while (i < rooms.length) {
             if (rooms[i].isit(roomid)) {
                 rooms[i].adduser(socket.id);
+                socket.emit("entersuccessful", true);
                 return;
             }
 
@@ -240,6 +364,7 @@ io.on('connection', (socket) => {
     catch (err) {
         console.log("Error");
         console.error(err);
+        socket.emit("entersuccessful", false);
     }
 
 
