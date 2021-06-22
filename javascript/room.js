@@ -46,13 +46,15 @@ function SocketCallbackInit() {
  */
 
 function startGame(Message) {
-    console.log(`This is start game message: ${Message}`);
+    console.log(`This is start game message`);
+    console.log(Message);
     /* Distribute two cards to every player */
     ;
 }
 
 function endGame(Message) {
-    console.log(`This is end game message: ${Message}`);
+    console.log(`This is end game message`);
+    console.log(Message);
     /* Output all players score */
     ;
     /* Output if user won or not */
@@ -64,34 +66,40 @@ function endGame(Message) {
  */
 
 function startUserStep(Message) {
-    console.log(`This is start user step message: ${Message}`);
+    console.log(`This is start user step message`);
+    console.log(Message);
     /* The UI appears */
     ;
 }
 
 function endUserStep(Message) {
-    console.log(`This is end user step message: ${Message}`);
+    console.log(`This is end user step message`);
+    console.log(Message);
     /* The UI disappears */
     ;
 }
 
 function startEnemyStep(Message) {
-    console.log(`This is start player step message: ${Message}`);
+    console.log(`This is start player step message`);
+    console.log(Message);
     ;
 }
 
 function endEnemyStep(Message) {
-    console.log(`This is end player step message: ${Message}`);
+    console.log(`This is end player step message`);
+    console.log(Message);
     ;
 }
 
 function startCroupierStep(Message) {
-    console.log(`This is start croupier step message: ${Message}`);
+    console.log(`This is start croupier step message`);
+    console.log(Message);
     ;
 }
 
 function endCroupierStep(Message) {
-    console.log(`This is end croupier step message: ${Message}`);
+    console.log(`This is end croupier step message`);
+    console.log(Message);
     ;
 }
 
@@ -100,22 +108,26 @@ function endCroupierStep(Message) {
  */
 
 function userCardDistr(Message) {
-    console.log(`This is user card message: ${Message}`);
+    console.log(`This is user card message`);
+    console.log(Message);
     ;
 }
 
 function enemyCardDistr(Message) {
-    console.log(`This is player card message: ${Message}`);
+    console.log(`This is player card message`);
+    console.log(Message);
     ;
 }
 
 function croupierCardDistr(Message) {
-    console.log(`This is croupier card message: ${Message}`);
+    console.log(`This is croupier card message`);
+    console.log(Message);
     ;
 }
 
 function onLoad() {
     roomConnection();
+    $("#start").on("click", () => { socket.emit('start game', 0) });
 }
 
 $(onLoad)
