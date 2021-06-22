@@ -3,8 +3,8 @@ const favicon = require('serve-favicon')
 const app = express();
 const http = require('http');
 const fs = require('fs');
+const crypto = require("crypto");
 const cookieParser = require('cookie-parser');
-const { randomInt } = require('crypto');
 const MongoClient = require('mongodb').MongoClient;
 const bcrypt = require("bcrypt");
 const MongoConnectionURL = "mongodb+srv://SumPracticeProjectBlackJack:PML_30_CGSG_FOREVER@main.sx78q.mongodb.net/Main?retryWrites=true&w=majority";
@@ -27,21 +27,12 @@ MongoClient.connect(MongoConnectionURL, { useNewUrlParser: true, useUnifiedTopol
         console.error(err);
     }
 });
-/*const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
-client.connect(err => {
-    const collection = client.db("test").collection("devices");
-    console.log(err);
-    client.close();
-});*/
-
-/*var debug = fs.createWriteStream('./!logs/errors.log');
-process.stdout.write = debug.write.bind(debug);*/
 
 function getRandomInt(max) {
-    return Math.floor(Math.random() * max);
+    return crypto.randomInt(0, max);
 }
 
-var __CurID = randomInt(4294967296.0);
+var __CurID = getRandomInt(4294967296.0);
 
 function getNextID() {
     __CurID += 1;
@@ -175,6 +166,16 @@ class User {
     get_socket() {
         return this.socket;
     }
+
+    get_name() {
+        try {
+            return this.socket.handshake.query.name;
+        }
+        catch (err) {
+            console.error(err);
+            return null;
+        }
+    }
 }
 
 class Room {
@@ -280,6 +281,34 @@ class Room {
             return;
         }
 
+        i = 0;
+        let Names = [];
+
+        while (i < this.users_amount) {
+            Names.push(this.users[i].get_name());
+        }
+
+        while (i < this.users_amount) {
+            try {
+                let L = [Cards[getRandomInt(Cards.length)], Cards[getRandomInt(Cards.length)]];
+                this.users[i].socket_send('user card', L[0]);
+                this.users[i].addcard(L[0]);
+                this.users[i].socket_send('user card', L[1]);
+                this.users[i].addcard(L[1]);
+
+                this.users[i].socket_send('start game', [L, this.users_amount, Names]);
+
+                this.users[this.curuser].socket_get('take card', () => { });
+                this.users[this.curuser].socket_get('end step', () => { });
+                this.users[this.curuser].socket_get('start game', () => { });
+            }
+            catch (err) {
+                console.error(err);
+            }
+
+            i += 1;
+        }
+
         this.curuser = -1;
     }
 
@@ -290,6 +319,28 @@ class Room {
             this.users[this.curuser].socket_send('end step', 0);
         }
 
+        for (let i = 0; i < this.users_amount; i += 1) {
+            if (i < this.curuser) {
+                this.users[i].socket_send('end player step', this.curuser);
+            }
+            else if (i == this.curuser) {
+                this.users[i].socket_send('end user step', 0);
+            }
+            else {
+                this.users[i].socket_send('end player step', this.curuser - 1);
+            }
+
+            if (i < this.curuser + 1) {
+                this.users[i].socket_send('start player step', this.curuser + 1);
+            }
+            else if (i == this.curuser + 1) {
+                this.users[i].socket_send('start user step', 0);
+            }
+            else {
+                this.users[i].socket_send('start player step', this.curuser);
+            }
+        }
+
         this.curuser += 1;
         if (this.curuser >= this.users_amount) {
             this.step = 2;
@@ -297,13 +348,15 @@ class Room {
         }
 
         let i = this.curuser;
+        let user = this.users[i];
 
         this.users[i].socket_get('take card', () => {
             let k = Cards[getRandomInt(Cards.length)];
-            this.users[i].socket_send('take card', k);
+            user.socket_send('take card', k);
+            this.player_got_card(i);
 
-            if (this.users[i].addcard(k) == false) {
-                this.users[i].socket_send('end step', 0);
+            if (user.addcard(k) == false) {
+                user.socket_send('end step', 0);
                 this.next_uset_if(i);
             }
         });
@@ -311,6 +364,17 @@ class Room {
             this.next_uset_if(i);
         });
         this.users[i].socket_send('start step', 0);
+    }
+
+    player_got_card(i) {
+        for (let j = 0; j < this.users_amount; j += 1) {
+            if (j < i) {
+                this.users[j].socket_send('player card', i);
+            }
+            else if (j > i) {
+                this.users[j].socket_send('player card', i - 1);
+            }
+        }
     }
 
     next_uset_if(i) {
