@@ -3,63 +3,7 @@
 <head>
     <title>Black Jack, play</title>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
-    <script type="text/javascript">
-        var num_of_token_cards = 0;
-        var iter = 1;
-        var num_of_open_cards = 1;
-        var deck;
-        var max_token_card = 127;
-        var opened_card = 0;
-
-        function open_card() {
-            /*deck = document.getElementById("axis");
-            num_of_open_cards++;
-            let img = document.createElement("img");
-            img.id = 'oc' + (num_of_open_cards).toString();
-            img.src = "/card_sample.jpg";
-            img.className = "object user_card";
-            img.width = 100;
-            deck.appendChild(img);
-            var ImgClasses = document.getElementById('oc' + (num_of_open_cards).toString()).classList;
-            ImgClasses.add("multiple_temp");
-        */
-            deck = document.getElementById("axis");
-            num_of_open_cards++;
-            let img = document.createElement("img");
-            img.id = "oc" + (max_token_card + num_of_open_cards + 1).toString();
-            img.src = "/card_sample.jpg";
-            img.className = "object user_card";
-            img.width = 100;
-            deck.appendChild(img);
-            var ImgClasses = document.getElementById("oc" + (max_token_card + num_of_open_cards).toString()).classList;
-            ImgClasses.add("multiple_temp");
-            document.getElementById(opened_card).remove();
-        }
-
-        function take_card() {
-            deck = document.getElementById("axis");
-            num_of_token_cards++;
-            let img = document.createElement("img");
-            img.id = (num_of_token_cards + 1).toString();
-            img.src = "/card_shirt.png";
-            img.className = "object card";
-            img.width = 120;
-            deck.appendChild(img);
-            var ImgClasses = document.getElementById(num_of_token_cards).classList;
-            var class_type = "multiple" + iter.toString();
-            ImgClasses.add(class_type);
-            if (iter == 1) {
-                opened_card = num_of_token_cards;
-                setTimeout(open_card, 2000);
-            }
-
-            iter++;
-            if (iter == 7)
-                iter = 1;
-        }
-    </script>
+    <script type="text/javascript" src="/room-main.js"></script>
 
     <style>
         body {
@@ -78,7 +22,7 @@
 
         .card {
             top: 42%;
-            left: 43%;
+            left: 50%;
         }
 
         .user_card {
@@ -86,13 +30,40 @@
             left: 5%;
         }
 
+        .dealer_card {
+            top: 10%;
+            left: 40%;
+        }
+
+        .hide {
+            display: none;
+        }
+
         .multiple_temp {
             top: 80%;
-            left: 30%;
+            left: 5%;
             transform: scale(1.5);
             -webkit-transform: scale(1.5);
             -o-transform: scale(1.5);
             -moz-transform: scale(1.5);
+        }
+
+        .multiple_temp2 {
+            top: 10%;
+            left: 40%;
+            transform: scale(0.7);
+            -webkit-transform: scale(0.7);
+            -o-transform: scale(0.7);
+            -moz-transform: scale(0.7);
+        }
+
+        .multiple_temp3 {
+            top: 10%;
+            left: 41.5%;
+            transform: scale(0.7);
+            -webkit-transform: scale(0.7);
+            -o-transform: scale(0.7);
+            -moz-transform: scale(0.7);
         }
 
         .multiple1 {
@@ -114,7 +85,7 @@
         }
 
         .multiple3 {
-            top: 20%;
+            top: 25%;
             left: 0%;
             transform: rotate(360deg) scale(0.5);
             -webkit-transform: rotate(360deg) scale(0.5);
@@ -123,7 +94,7 @@
         }
 
         .multiple4 {
-            top: 30%;
+            top: 40%;
             left: 0%;
             transform: rotate(360deg) scale(0.5);
             -webkit-transform: rotate(360deg) scale(0.5);
@@ -132,7 +103,7 @@
         }
 
         .multiple5 {
-            top: 40%;
+            top: 55%;
             left: 0%;
             transform: rotate(360deg) scale(0.5);
             -webkit-transform: rotate(360deg) scale(0.5);
@@ -154,13 +125,15 @@
 
 <body>
     <p> Fig znaet, chto tut budet... </p>
+    <button id="start">На старт! Внимание! ЖМААААК!</button>
+    <button id="take">Жмак!</button>
+    <button id="finish_step">Жмакай!</button>
+    <button id="finish">Жмакни для результатиков!</button>
     <br>
-    <button id="axis" onclick="take_card();"> Жмакни сюды
+    <div id="axis">
         <img class="object card" src="/card_shirt.png" width=120px />
         <img id="1" class="object card" src="/card_shirt.png" width=120px />
-        <img id="oc128" />
-        <img id="oc129" />
-    </button>
+    </div>
 </body>
 
 </html>
