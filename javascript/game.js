@@ -2,7 +2,6 @@ import _ from 'lodash'
 import * as $ from 'jquery';
 
 var num_of_token_cards = 0;
-var iteration = 1;
 var deck;
 var max_token_card = 127;
 var opened_user_card = 0;
@@ -111,15 +110,9 @@ export function take_card(iter, value) {
 }
 
 export function user_finish_step(value1, value2) {
-    if (iteration == 1) {
-        $("#start").prop('disabled', true);
-        $("#take").prop('disabled', true);
-        $("#finish").prop('disabled', true);
-    }
-    iteration++;
-    if (iteration == 6) {
-        open_dealer_start_cards(value1, value2);
-    }
+    $("#start").prop('disabled', true);
+    $("#take").prop('disabled', true);
+    $("#finish").prop('disabled', true);
 }
 
 export function start_game(value1, value2, players, nicknames) {
