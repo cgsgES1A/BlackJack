@@ -15,14 +15,13 @@
     "mongodb": "^3.6.9",
     "serve-favicon": "^2.5.0",
     "socket.io": "^4.1.2",
-    "socket.io-client": "^4.1.2",
-    "webpack": "^5.39.1"
+    "socket.io-client": "^4.1.2"
   },
   "devDependencies": {
     "crypto": "^1.0.1",
     "crypto-random-string": "^4.0.0",
     "mongodb": "^3.6.9",
-    "webpack": "^5.39.1",
+    "webpack": "^5.40.0",
     "webpack-cli": "^4.7.2"
   },
   "scripts": {

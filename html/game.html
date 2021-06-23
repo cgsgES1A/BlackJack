@@ -179,12 +179,73 @@
             border-color: invert(#fff);
             color: invert(#fff);
         }
+
+        #dark {
+            background: rgba(102, 102, 102, 0.5);
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+
+        #window {
+            width: 300px;
+            height: 150px;
+            text-align: center;
+            padding: 15px;
+            border: 3px solid green;
+            border-radius: 10px;
+            color: green;
+            font-family: Open Sans;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-decoration: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            margin: auto;
+            background: #fff;
+        }
+
+        #dark:target {
+            display: block;
+        }
+
+        .close {
+            display: inline-block;
+            border: 1px solid green;
+            color: green;
+            padding: 0 12px;
+            margin: 10px;
+            font-family: Open Sans;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-decoration: none;
+            background: #f2f2f2;
+            font-size: 14pt;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            background: #e6e6ff;
+        }
+
+        #ahelp {
+            color: white;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-decoration: none;
+        }
     </style>
 
 </head>
 
 <body>
-    <button id="help" class="circ-button b1">Help</button>
+    <a href="#dark" id="ahelp"><button id="help" class="circ-button b1">Help </button></a>
     <button id="start" class="circ-button b2">Start</button>
     <button id="take" class="circ-button b3">Take</button>
     <button id="finish" class="circ-button b4">Finish</button>
@@ -194,6 +255,15 @@
         <img class="object card1" src="/card_shirt.png" width=120px />
         <img class="object card2" src="/card_shirt.png" width=120px />
         <img id="1" class="object card" src="/card_shirt.png" width=120px />
+    </div>
+
+    <div id="dark">
+        <div id="window">
+            Здесь должна быть какая-то умная хрень про правила нашего шикарного блэк-джека... Но мне дико лень её
+            писать. Поэтому пока что тут будет эта хрень про хрень.. А ещё можно добавить ссылочку на Википедию про
+            блэк-джек.)<br>
+            <a href="#" class="close">Close</a>
+        </div>
     </div>
 </body>
 
