@@ -403,10 +403,11 @@ class Room {
                 return;
             }
             let k = Cards[getRandomInt(Cards.length)];
+            let flag = user.addcard(k);
             user.socket_send('user card', [k, user.cardsum()]);
             this.player_got_card(i);
 
-            if (user.addcard(k) == false) {
+            if (flag == false) {
                 user.socket_send('end user step', user.cardsum());
                 this.next_user_if(i);
             }
@@ -439,7 +440,7 @@ class Room {
     }
 
     delroom() {
-        step = -1;
+        this.step = -1;
         this.send_all('disconnect', 0);
         this.users = [-1, -1, -1, -1, -1];
         this.users_amount = 0;
