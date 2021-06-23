@@ -15,7 +15,7 @@ export function getRandomInt(max) {
 }
 
 export function get_image_url(value) {
-    let img_address = "/0.15s";
+    let img_address = "/card_";
     switch (value) {
         case 1:
         case 2:
