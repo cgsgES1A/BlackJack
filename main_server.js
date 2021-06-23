@@ -7,11 +7,15 @@ const crypto = require("crypto");
 const cookieParser = require('cookie-parser');
 const MongoClient = require('mongodb').MongoClient;
 const bcrypt = require("bcrypt");
-const MongoConnectionURL = "mongodb+srv://SumPracticeProjectBlackJack:PML_30_CGSG_FOREVER@main.sx78q.mongodb.net/Main?retryWrites=true&w=majority";
+const md5 = require("md5");
 
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
+
+const MongoConnectionProjectName = "SumPracticeProjectBlackJack";
+const MongoConnectionPassword = "PML_30_CGSG_FOREVER";
+const MongoConnectionURL = `mongodb+srv://${MongoConnectionProjectName}:${MongoConnectionPassword}@main.sx78q.mongodb.net/Main?retryWrites=true&w=majority`;
 
 var db = null;
 var collection = null;
@@ -32,12 +36,13 @@ function getRandomInt(max) {
     return crypto.randomInt(0, max);
 }
 
-var __CurID = getRandomInt(4294967296.0);
+var __CurID = getRandomInt(65536);
 
 function getNextID() {
     __CurID += 1;
+    __CurID = __CurID % 65536;
 
-    return __CurID;
+    return (123456 + __CurID).toString(16);
 }
 
 function Encrypt(data) {
@@ -214,6 +219,9 @@ class Room {
         if (this.step == 0 && (Date.now() - this.creation_time) > 120000) {
             return true;
         }
+        if (this.step > 0 && this.users_amount <= 0) {
+            return true;
+        }
 
         return false;
     }
@@ -260,6 +268,7 @@ class Room {
             if (this.users[i] != -1 && this.users[i].isit(id)) {
                 this.users[i].socket_default();
                 this.users[i] = -1;
+                this.users_amount -= 1;
                 return true;
             }
             i += 1;
@@ -348,9 +357,22 @@ class Room {
 
     next_user() {
         if (this.curuser >= 0) {
-            this.users[this.curuser].socket_get('take card', () => { ; });
-            this.users[this.curuser].socket_get('end step', () => { ; });
-            this.users[this.curuser].socket_send('end step', 0);
+            if (this.users[this.curuser] != -1) {
+                try {
+                    this.users[this.curuser].socket_get('take card', () => { ; });
+                    this.users[this.curuser].socket_get('end step', () => { ; });
+                    this.users[this.curuser].socket_send('end step', 0);
+
+                    let socket = this.users[this.curuser].get_socket();
+                    this.users[this.curuser].socket_get('disconnect', () => {
+                        this.deluser(socket.id);
+                        SocketStdDisconnect(socket);
+                    });
+                }
+                catch (err) {
+                    console.error(err);
+                }
+            }
 
             for (let i = 0; i < this.users_amount; i += 1) {
                 if (i > this.curuser) {
@@ -417,6 +439,15 @@ class Room {
             }
             user.socket_send('end user step', user.cardsum());
             this.next_user_if(i);
+        });
+
+        let socket = this.users[i].get_socket();
+        this.users[i].socket_get('disconnect', () => {
+            if (this.curuser == i) {
+                this.next_user();
+            }
+            this.deluser(socket.id);
+            SocketStdDisconnect(socket);
         });
     }
 
@@ -542,10 +573,10 @@ class Room {
                 }
 
                 this.users[i].socket_send('end game', [this.users_amount, users_score, flag]);
-
-                setTimeout(() => { this.delroom(); }, 10000);
             }
         }
+
+        setTimeout(() => { this.delroom(); }, 10000);
     }
 }
 
