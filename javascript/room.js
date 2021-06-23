@@ -161,13 +161,19 @@ function endCroupierStep(Message) {
  */
 
 function userCardDistr(Message) {
-    if (Message == null || Message == undefined) {
+    if (Message == null || Message == undefined ||
+        Message[0] == undefined || Message[1] == undefined || Message[2] == undefined ||
+        Message[0] < 2 || Message[0] > 11 || Message[1] < 2 || Message[1] > 11) {
         alert("Wrong message (user card)!");
         return;
     }
     console.log(`This is user card message`);
     console.log(Message);
-    ;
+
+    let card_val1 = Message[0] == 11 ? 1 : Message[0];
+    let card_val2 = Message[1] == 11 ? 1 : Message[1];
+    Game.take_card(1, card_val1);
+    Game.take_card(1, card_val2);
 }
 
 function enemyCardDistr(Message) {
