@@ -117,18 +117,16 @@ export function user_finish_step(value1, value2) {
     }
 }
 
-export function start_game(value1, value2) {
+export function start_game(players, value1, value2) {
     take_card(1, value1);
     for (var j = 0; j < 2; j++)
-        for (var i = 1; i < 6; i++)
+        for (var i = 1; i < players + 1; i++)
             take_card(i + 1);
     started_flag = 1;
     setTimeout(take_card, 2000, 1, value2);
 }
 
-export function finish_game(res) {
-    let results = res;
-    let is_win = results.pop();
+export function finish_game(players, results, is_win) {
     alert(results.join('\n'));
     if (is_win)
         alert("YOU WIN!!!");
