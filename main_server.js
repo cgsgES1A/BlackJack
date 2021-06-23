@@ -315,9 +315,7 @@ class Room {
             try {
                 let c1 = Cards[getRandomInt(Cards.length)];
                 let c2 = Cards[getRandomInt(Cards.length)];
-                this.users[i].socket_send('user card', c1);
                 this.users[i].addcard(c1);
-                this.users[i].socket_send('user card', c2);
                 this.users[i].addcard(c2);
 
                 let j = 0;
@@ -330,7 +328,7 @@ class Room {
                     j += 1;
                 }
 
-                this.users[i].socket_send('start game', [[c1, c2], this.users_amount - 1, Names]);
+                this.users[i].socket_send('start game', [[c1, c2], this.users_amount - 1, Names, this.users[i].cardsum()]);
 
                 this.users[i].socket_get('take card', () => { });
                 this.users[i].socket_get('end step', () => { });
