@@ -67,8 +67,12 @@ function startGame(Message) {
     }
     console.log(`This is start game message`);
     console.log(Message);
+
+    let card_val1 = Message[0][0] == 11 ? 1 : Message[0][0];
+    let card_val2 = Message[0][1] == 11 ? 1 : Message[0][1];
+
     /* Distribute two cards to every player */
-    Game.start_game(Message[0][0], Message[0][1], Message[1], Message[2]);
+    Game.start_game(card_val1, card_val2, Message[1], Message[2]);
 }
 
 function endGame(Message) {
@@ -162,18 +166,18 @@ function endCroupierStep(Message) {
 
 function userCardDistr(Message) {
     if (Message == null || Message == undefined ||
-        Message[0] == undefined || Message[1] == undefined || Message[2] == undefined ||
-        Message[0] < 2 || Message[0] > 11 || Message[1] < 2 || Message[1] > 11) {
+        Message[0] == undefined || Message[1] == undefined ||
+        Message[0] < 2 || Message[0] > 11) {
+        console.log(`This is user card message`);
         alert("Wrong message (user card)!");
+        console.log(Message);
         return;
     }
     console.log(`This is user card message`);
     console.log(Message);
 
-    let card_val1 = Message[0] == 11 ? 1 : Message[0];
-    let card_val2 = Message[1] == 11 ? 1 : Message[1];
-    Game.take_card(1, card_val1);
-    Game.take_card(1, card_val2);
+    let card_val = Message[0] == 11 ? 1 : Message[0];
+    Game.take_card(1, card_val);
 }
 
 function enemyCardDistr(Message) {
