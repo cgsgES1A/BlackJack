@@ -441,7 +441,7 @@ class Room {
 
     delroom() {
         this.step = -1;
-        this.send_all('disconnect', 0);
+        this.send_all('disconnect_user', 0);
         this.users = [-1, -1, -1, -1, -1];
         this.users_amount = 0;
     }
