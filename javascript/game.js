@@ -111,6 +111,11 @@ export function take_card(iter, value) {
 }
 
 export function user_finish_step(value1, value2) {
+    if (iteration == 1) {
+        $("#start").prop('disabled', true);
+        $("#take").prop('disabled', true);
+        $("#finish").prop('disabled', true);
+    }
     iteration++;
     if (iteration == 6) {
         open_dealer_start_cards(value1, value2);
