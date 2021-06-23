@@ -87,10 +87,10 @@ export function take_card(iter, value) {
     img.css({ 'width': '120' });
 
     if (value == 30 || value == 31)
-        img.attr('id', value.toString());
+        img.attr('id', 'd' + value.toString());
     else {
         num_of_token_cards++;
-        img.attr('id', 'd' + (num_of_token_cards + 1).toString());
+        img.attr('id', (num_of_token_cards + 1).toString());
     }
     deck.append(img);
     var class_type = "multiple" + iter.toString();
