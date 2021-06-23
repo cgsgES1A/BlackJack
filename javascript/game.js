@@ -15,7 +15,7 @@ export function getRandomInt(max) {
 }
 
 export function get_image_url(value) {
-    let img_address = "/card_";
+    let img_address = "/0.15s";
     switch (value) {
         case 1:
         case 2:
@@ -55,7 +55,7 @@ export function open_dealer_card(id, value) {
     img.attr('id', "odc" + (max_token_card + token_cards[5]).toString());
     img.attr('src', get_image_url(value));
     img.attr('class', "object user_card multiple_temp2");
-    img.css({ 'top': "10%", 'width': '84', 'left': `${(40 + 1.5 * (token_cards[5]))}%` });
+    img.css({ 'top': "10%", 'width': '120', 'left': `${(40 + 1.5 * (token_cards[5]))}%` });
 
     deck.append(img);
     $('#' + id).remove();
@@ -86,7 +86,7 @@ export function take_card(iter, value) {
     let img = $("<img></img>");
 
     img.attr('id', (num_of_token_cards + 1).toString());
-    img.attr('src', "/card_shirt.png");
+    img.attr('src', "/0.15sshirt.png");
     img.attr('class', "object card");
     img.css({ 'width': '120' });
     deck.append(img);
@@ -122,7 +122,7 @@ export function user_finish_step(value1, value2) {
     }
 }
 
-export function start_game(players, value1, value2) {
+export function start_game(value1, value2, players, nicknames) {
     take_card(1, value1);
     for (var j = 0; j < 2; j++)
         for (var i = 1; i < players + 1; i++)
