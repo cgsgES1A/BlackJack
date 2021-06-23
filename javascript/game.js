@@ -61,8 +61,8 @@ export function open_dealer_card(id, value) {
 }
 
 export function open_dealer_start_cards(value1, value2) {
-    $('#' + 6).remove();
-    $('#' + 11).remove();
+    $("#d30").remove();
+    $("#d31").remove();
     deck = $("#axis");
     let img1 = $("<img></img>");
     img1.attr('id', "odc" + (max_token_card + token_cards[5] - 1).toString());
@@ -81,13 +81,17 @@ export function open_dealer_start_cards(value1, value2) {
 export function take_card(iter, value) {
     token_cards[iter - 1] += 1;
     deck = $("#axis");
-    num_of_token_cards++;
     let img = $("<img></img>");
-
-    img.attr('id', (num_of_token_cards + 1).toString());
     img.attr('src', "/card_shirt.png");
     img.attr('class', "object card");
     img.css({ 'width': '120' });
+
+    if (value == 30 || value == 31)
+        img.attr('id', value.toString());
+    else {
+        num_of_token_cards++;
+        img.attr('id', 'd' + (num_of_token_cards + 1).toString());
+    }
     deck.append(img);
     var class_type = "multiple" + iter.toString();
     $('#' + num_of_token_cards).addClass(class_type);
@@ -118,8 +122,12 @@ export function user_finish_step(value1, value2) {
 export function start_game(value1, value2, players, nicknames) {
     take_card(1, value1);
     for (var j = 0; j < 2; j++) {
-        for (var i = 1; i < players; i++)
-            take_card(i + 1);
+        for (var i = 1; i < players; i++) {
+            if (i == players - 1)
+                take_card(i + 1, 30 + j);
+            else
+                take_card(i + 1);
+        }
         take_card(6);
     }
     started_flag = 1;
