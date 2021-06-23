@@ -86,8 +86,13 @@ export function take_card(iter, value) {
     img.attr('class', "object card");
     img.css({ 'width': '120' });
 
-    if (value == 30 || value == 31)
-        img.attr('id', 'd' + value.toString());
+    if (iter > 10) {
+        if (iter == 16)
+            img.attr('id', 'ds2');
+        else
+            img.attr('id', 'ds1');
+        iter -= 10;
+    }
     else {
         num_of_token_cards++;
         img.attr('id', (num_of_token_cards + 1).toString());
@@ -120,16 +125,19 @@ export function user_finish_step(value1, value2) {
 }
 
 export function start_game(value1, value2, players, nicknames) {
-    take_card(1, value1);
-    for (var j = 0; j < 2; j++) {
-        for (var i = 1; i < players; i++) {
-            if (i == players - 1)
-                take_card(i + 1, 30 + j);
+    if (players == 0)
+        take_card(11, value1);
+    else
+        take_card(1, value1);
+    for (var j = 0; j < 2; j++)
+        for (var i = 1; i < players + 1; i++) {
+            if (i == players - 1 && j == 1)
+                take_card(10 + i + 1);
             else
                 take_card(i + 1);
         }
-        take_card(6);
-    }
+    take_card(16);
+    take_card(6);
     started_flag = 1;
     setTimeout(take_card, 2000, 1, value2);
 }
