@@ -205,13 +205,13 @@ class Room {
     }
 
     is_del_time() {
-        if (step == -1) {
+        if (this.step == -1) {
             return true;
         }
-        if (step != 0 && this.users[0] == -1 && this.users[1] == -1 && this.users[2] == -1 && this.users[3] == -1 && this.users[4] == -1) {
+        if (this.step != 0 && this.users[0] == -1 && this.users[1] == -1 && this.users[2] == -1 && this.users[3] == -1 && this.users[4] == -1) {
             return true;
         }
-        if (step == 0 && (Date.now() - this.creation_time) > 120000) {
+        if (this.step == 0 && (Date.now() - this.creation_time) > 120000) {
             return true;
         }
 
@@ -403,10 +403,11 @@ class Room {
                 return;
             }
             let k = Cards[getRandomInt(Cards.length)];
+            let flag = user.addcard(k);
             user.socket_send('user card', [k, user.cardsum()]);
             this.player_got_card(i);
 
-            if (user.addcard(k) == false) {
+            if (flag == false) {
                 user.socket_send('end user step', user.cardsum());
                 this.next_user_if(i);
             }
@@ -439,7 +440,7 @@ class Room {
     }
 
     delroom() {
-        step = -1;
+        this.step = -1;
         this.send_all('disconnect', 0);
         this.users = [-1, -1, -1, -1, -1];
         this.users_amount = 0;
@@ -476,6 +477,19 @@ class Room {
     }
 
     dealer_take_card() {
+        if (this.dealer_cards_sum > 21) {
+            let i = this.dealer_cards.indexOf(11);
+
+            if (i == -1) {
+                this.send_all('end dealer step', this.dealer_cards_sum);
+                setTimeout(() => { this.end_game() }, 2000);
+                return;
+            }
+
+            this.dealer_cards_sum -= 10;
+            this.dealer_cards[i] = 1;
+        }
+
         if (this.dealer_cards_sum < 17) {
             let k = Cards[getRandomInt(Cards.length)];
 
@@ -530,8 +544,23 @@ class Room {
                 }
 
                 this.users[i].socket_send('end game', [this.users_amount, users_score, flag]);
+
+                setTimeout(() => { this.delroom(); }, 10000);
             }
         }
+    }
+}
+
+function RoomCleaner() {
+    let forDel = [];
+    rooms.forEach((val, i) => {
+        if (val.is_del_time()) {
+            forDel.push(i);
+        }
+    });
+
+    for (let i = forDel.length - 1; i >= 0; i -= 1) {
+        rooms.splice(forDel[i], 1);
     }
 }
 
@@ -708,3 +737,5 @@ app.post('/signup', (req, res) => {
 server.listen(3000, () => {
     console.log('listening on *:3000');
 });
+
+setInterval(() => { RoomCleaner(); }, 12000);
