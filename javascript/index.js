@@ -114,8 +114,10 @@ function roomSession() {
         alert("Error in room connection (wrong id)");
         return;
     }
-    if (!Cookies.get('userName'))
+    if (!Cookies.get('userName')) {
         alert("You need to login before room connecting");
+        return;
+    }
     Cookies.set("roomId", roomId);
     location.href = "game.html";
 }
