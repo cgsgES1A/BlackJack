@@ -86,7 +86,7 @@ export function take_card(iter, value) {
     let img = $("<img></img>");
 
     img.attr('id', (num_of_token_cards + 1).toString());
-    img.attr('src', "/0.15sshirt.png");
+    img.attr('src', "/card_shirt.png");
     img.attr('class', "object card");
     img.css({ 'width': '120' });
     deck.append(img);
