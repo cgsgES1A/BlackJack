@@ -731,6 +731,7 @@ app.post('/login', (req, res) => {
                 let msg = JSON.parse(data);
                 CheckLogin(msg.name, msg.password).then(data => {
                     console.log(`Login try: name: ${msg.name}, pass(hash): ${msg.password}. Result: ${data}`);
+                    res.writeHead(200);
                     res.end(data.toString());
                 });
             }
@@ -756,6 +757,7 @@ app.post('/signup', (req, res) => {
                 let msg = JSON.parse(data);
                 AddUser(msg.name, msg.password).then(data => {
                     console.log(`Sign up try: name: ${msg.name}, pass(hash): ${msg.password}. Result: ${data}`);
+                    res.writeHead(200);
                     res.end(data.toString());
                 });
             }

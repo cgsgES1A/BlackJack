@@ -38,6 +38,8 @@ function loginUser() {
     let password = md5($("#input_password").val());
     let isOkName = true, isOkPassword = true;
 
+    alert("In login function");
+
     if (name == null || name == undefined || name.length == 0) {
         name = Cookies.get('userName');
         if (name == null || name == undefined)
@@ -56,17 +58,23 @@ function loginUser() {
         Cookies.set("userPassword", password);
         fetch('/login', {
             method: 'POST',
-            body: JSON.stringify({ name: name, password: password }),
+            body: JSON.stringify({ name: name, password: password })
         })
             .then(response => {
+                console.log(responce);
+
                 if (!response.ok) {
                     throw new Error(`Response status is: ${response.status}`);
                 }
                 return response.text();
             })
             .then(text => {
-                if (text == "true")
-                    location.href = "room.html";
+                console.log(text);
+
+                if (text == "true") {
+                    alert("You try to connect to the room");
+                    location.href = "./room.html";
+                }
                 else
                     alert("Failed to login user");
             });
