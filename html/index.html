@@ -28,7 +28,6 @@
         }
 
         h1 {
-            display: block;
             text-align: center;
             padding: 0 0 20px 0;
             border-bottom: 1px solid silver;
@@ -68,7 +67,7 @@
             width: 0%;
             height: 2px;
             background: #2691d9;
-            transition: .5ss;
+            transition: .5s;
         }
 
         .txt_wrap {
@@ -81,6 +80,17 @@
         .txt_wrap input:valid~label {
             top: -3px;
             color: #2691d9;
+        }
+
+        .txt_wrap input:focus~label,
+        .txt_wrap input:valid~label {
+            top: -3px;
+            color: #2691d9;
+        }
+
+        .txt_wrap input:focus~span::before,
+        .txt_wrap input:valid~span::before {
+            width: 100%;
         }
 
         button {
