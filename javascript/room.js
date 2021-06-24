@@ -71,6 +71,7 @@ function startGame(Message) {
     let card_val1 = Message[0][0] == 11 ? 1 : Message[0][0];
     let card_val2 = Message[0][1] == 11 ? 1 : Message[0][1];
 
+    Message[2].push(Cookies.get("userName"));
     /* Distribute two cards to every player */
     Game.start_game(card_val1, card_val2, Message[1], Message[2]);
 }
