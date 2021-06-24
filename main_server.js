@@ -42,7 +42,7 @@ function getNextID() {
     __CurID += 1;
     __CurID = __CurID % 65536;
 
-    return (123456 + __CurID).toString(16);
+    return (11259375 + __CurID * 47).toString(16);
 }
 
 function Encrypt(data) {
@@ -588,9 +588,13 @@ function RoomCleaner() {
         }
     });
 
+    let tmp = rooms.length;
+
     for (let i = forDel.length - 1; i >= 0; i -= 1) {
         rooms.splice(forDel[i], 1);
     }
+
+    console.log(`Rooms avalible: ${tmp}; Will be deleted: ${forDel.length}; After cleaning: ${rooms.length}`);
 }
 
 app.use(cookieParser());
@@ -606,6 +610,7 @@ app.get('/', (req, res) => {
 app.get('/create_room', function (req, res) {
     res.writeHead(200);
     let room = new Room(getNextID());
+    console.log(`New room created. Id: ${room.getid()}`);
     rooms.push(room);
     res.end(room.getid().toString());
 });
@@ -725,6 +730,7 @@ app.post('/login', (req, res) => {
             try {
                 let msg = JSON.parse(data);
                 CheckLogin(msg.name, msg.password).then(data => {
+                    console.log(`Login try: name: ${msg.name}, pass(hash): ${msg.password}. Result: ${data}`);
                     res.end(data.toString());
                 });
             }
@@ -749,6 +755,7 @@ app.post('/signup', (req, res) => {
             try {
                 let msg = JSON.parse(data);
                 AddUser(msg.name, msg.password).then(data => {
+                    console.log(`Sign up try: name: ${msg.name}, pass(hash): ${msg.password}. Result: ${data}`);
                     res.end(data.toString());
                 });
             }
@@ -767,4 +774,4 @@ server.listen(3000, () => {
     console.log('listening on *:3000');
 });
 
-setInterval(() => { RoomCleaner(); }, 12000);
+setInterval(() => { RoomCleaner(); }, 60 * 1000);
