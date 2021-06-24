@@ -527,7 +527,7 @@ class Room {
 
             this.send_all('dealer card', k);
 
-            setTimeout(() => { this.dealer_take_card(); }, 1000 + getRandomInt(1000));
+            setTimeout(() => { this.dealer_take_card(); }, 2500 + getRandomInt(1500));
         }
         else {
             this.send_all('end dealer step', this.dealer_cards_sum);
@@ -563,7 +563,7 @@ class Room {
                 else if (sum < 21) {
                     let tmp = true;
                     for (let j = 0; j < users_score.length; j += 1) {
-                        if (users_score[j] <= 21 && users_score[j] >= sum) {
+                        if (users_score[j] <= 21 && users_score[j] > sum) {
                             tmp = false;
                             break;
                         }
