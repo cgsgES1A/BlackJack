@@ -218,7 +218,7 @@ class Room {
         if (this.step != 0 && this.users[0] == -1 && this.users[1] == -1 && this.users[2] == -1 && this.users[3] == -1 && this.users[4] == -1) {
             return true;
         }
-        if (this.step == 0 && (Date.now() - this.creation_time) > 120000) {
+        if (this.step == 0 && this.users_amount <= 0 && (Date.now() - this.creation_time) > 120000) {
             return true;
         }
         if (this.step > 0 && this.users_amount <= 0) {
@@ -246,6 +246,7 @@ class Room {
 
         while (i < 5) {
             if (this.users[i] == -1) {
+                this.users_amount += 1;
                 this.users[i] = new User(id);
                 let socket = this.users[i].get_socket();
                 this.users[i].socket_get('start game', () => {
@@ -334,7 +335,7 @@ class Room {
 
                 while (j < this.users_amount) {
                     if (j != i) {
-                        Names.push(this.users[i].get_name());
+                        Names.push(this.users[j].get_name());
                     }
                     j += 1;
                 }
@@ -538,23 +539,23 @@ class Room {
     }
 
     end_game() {
-        let all_users_score = [];
+        let all_users_score = [-1, -1, -1, -1, -1];
 
         for (let j = 0; j < this.users_amount; j += 1) {
             if (this.users[j] != -1) {
-                all_users_score.push(this.users[j].cardsum());
+                all_users_score[j] = this.users[j].cardsum();
             }
         }
 
         for (let i = 0; i < this.users_amount; i += 1) {
             if (this.users[i] != -1) {
-                let sum = this.users[i].cardsum();
+                let sum = all_users_score[i];
                 let flag = false;
                 let users_score = [];
 
                 for (let j = 0; j < this.users_amount; j += 1) {
-                    if (this.users[j] != -1 && j != i) {
-                        users_score.push(this.users[j].cardsum());
+                    if (all_users_score[j] != -1 && j != i) {
+                        users_score.push(all_users_score[j]);
                     }
                 }
 
@@ -574,7 +575,21 @@ class Room {
                     flag = tmp;
                 }
 
-                this.users[i].socket_send('end game', [this.users_amount - 1, users_score, flag]);
+                all_users_score[i] = [all_users_score[i], flag];
+            }
+        }
+
+        for (let i = 0; i < this.users_amount; i += 1) {
+            if (this.users[i] != -1) {
+                let tmp = [];
+
+                for (let j = 0; j < this.users_amount; j += 1) {
+                    if (i != j) {
+                        tmp.push(all_users_score[j]);
+                    }
+                }
+
+                this.users[i].socket_send('end game', [this.users_amount - 1, tmp, all_users_score[i][1]]);
             }
         }
 
@@ -593,6 +608,7 @@ function RoomCleaner() {
     let tmp = rooms.length;
 
     for (let i = forDel.length - 1; i >= 0; i -= 1) {
+        rooms[forDel[i]].send_all('disconnect_user', 0);
         rooms.splice(forDel[i], 1);
     }
 
