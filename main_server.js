@@ -563,7 +563,7 @@ class Room {
                 else if (sum < 21) {
                     let tmp = true;
                     for (let j = 0; j < users_score.length; j += 1) {
-                        if (users_score[j] <= 21 && users_score[j] >= sum) {
+                        if (users_score[j] <= 21 && users_score[j] > sum) {
                             tmp = false;
                             break;
                         }
