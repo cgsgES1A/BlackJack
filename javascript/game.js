@@ -81,7 +81,9 @@ export function open_dealer_start_cards(value1, value2) {
 
 export function points_view(points) {
     let text = $(`<p>${points}</p>`);
-    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "68.5%", 'left': "2%" });
+    text.attr('id', "pnts" + token_cards[0]);
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "67%", 'left': "2%" });
+    $("#pnts" + token_cards[0] - 1).remove();
     $("#axis").append(text);
 }
 
@@ -127,7 +129,7 @@ export function user_finish_step(points) {
     $("#finish").prop('disabled', true);
 }
 
-export function start_game(value1, value2, players, nicknames) {
+export function start_game(value1, value2, players, nicknames, points) {
     let text;
     for (var i = 1; i < players + 1; i++) {
         text = $(`<p>${nicknames[i - 1]}</p>`);
@@ -138,7 +140,7 @@ export function start_game(value1, value2, players, nicknames) {
     text.css({ 'position': "absolute", 'color': 'white', 'font-size': '20', 'top': "6%", 'left': "45%" });
     $("#axis").append(text);
     text = $(`<p>${nicknames[players]}</p>`);
-    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "68.5%", 'left': "5%" });
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "67%", 'left': "5%" });
     $("#axis").append(text);
     take_card(1, value1);
     for (var j = 0; j < 2; j++)
@@ -148,6 +150,7 @@ export function start_game(value1, value2, players, nicknames) {
     take_card(6);
     started_flag = 1;
     setTimeout(take_card, 2000, 1, value2);
+    setTimeout(points_view, 2000, points);
     $("#start").prop('disabled', true);
 }
 
