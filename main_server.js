@@ -555,7 +555,12 @@ class Room {
 
                 for (let j = 0; j < this.users_amount; j += 1) {
                     if (all_users_score[j] != -1 && j != i) {
-                        users_score.push(all_users_score[j]);
+                        if (typeof all_users_score[j] == 'object') {
+                            users_score.push(all_users_score[j][0]);
+                        }
+                        else {
+                            users_score.push(all_users_score[j]);
+                        }
                     }
                 }
 
@@ -655,8 +660,7 @@ io.on('connection', (socket) => {
 
         while (i < rooms.length) {
             if (rooms[i].isit(roomid)) {
-                rooms[i].adduser(socket.id);
-                socket.emit("entersuccessful", true);
+                socket.emit("entersuccessful", rooms[i].adduser(socket.id));
                 return;
             }
 
