@@ -144,6 +144,8 @@ class User {
 
     socket_default() {
         try {
+            this.socket.removeAllListeners();
+
             this.socket.on('disconnect', () => {
                 SocketStdDisconnect(this.socket);
             });
@@ -572,7 +574,7 @@ class Room {
                     flag = tmp;
                 }
 
-                this.users[i].socket_send('end game', [this.users_amount, users_score, flag]);
+                this.users[i].socket_send('end game', [this.users_amount - 1, users_score, flag]);
             }
         }
 
