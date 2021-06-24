@@ -8,7 +8,7 @@
             margin: 0;
             padding: 0;
             font-family: Verdana, Geneva, Tahoma, sans-serif;
-            background-image: url('background.jpg');
+            background-image: url('./background.jpg');
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
@@ -26,24 +26,18 @@
             border-radius: 10px;
         }
 
-        .container h1 {
+        h1 {
             text-align: center;
             padding: 0 0 20px 0;
             border-bottom: 1px solid silver;
         }
 
-        .container form {
+        form {
             padding: 0 40px;
             box-sizing: border-box;
         }
 
-        .txt_wrap {
-            position: relative;
-            border-bottom: 2px solid #adadad;
-            margin: 30px 0;
-        }
-
-        .txt_wrap input {
+        input {
             width: 100%;
             padding: 0 5px;
             height: 40px;
@@ -53,7 +47,7 @@
             outline: none;
         }
 
-        .txt_wrap label {
+        label {
             position: absolute;
             top: 50%;
             left: 5px;
@@ -61,6 +55,12 @@
             transform: translateY(-50%);
             font-size: 16px;
             pointer-events: none;
+        }
+
+        .txt_wrap {
+            position: relative;
+            border-bottom: 2px solid #adadad;
+            margin: 30px 0;
         }
 
         button {
@@ -80,25 +80,34 @@
             border-color: #2691d9;
         }
     </style>
+    <script>
+    //       <label for="input_name">Name</label> <input type="text" id="input_name">
+    //br>
+    //label for="input_password">Password</label> <input type="text" id="input_password">
+    //br><br>
+    //button id="user_login_button">Enter</button>
+    //br>
+    //button id="user_logup_button">Register</button>
+    //br><br><br><br>
+    //button onclick="window.location.href = '/room.html';">Next</button>
+    </script>
 </head>
 
 <body>
     <div class="container">
-        <h1>Login<h1>
-                <form>
+        <form>
+            <h1>Login<h1>
                     <div class="txt_wrap">
-                        <input id="input_name" type="text">
-                        <span></span>
-                        <label>Username</label>
+                        <input type="text" id="input_name">
+                        <label for="input_name">Username</label>
                     </div>
                     <div class="txt_wrap">
-                        <input id="input_password" type="text">
-                        <span></span>
-                        <label>Password</label>
+                        <input type="text" id="input_password">
+                        <label for="input_password">Password</label>
                     </div>
                     <button id="user_login_button">Login</button>
                     <button id="user_logup_button">Signup</button>
-                </form>
+        </form>
     </div>
 </body>
 
