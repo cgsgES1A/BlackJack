@@ -174,7 +174,7 @@ function userCardDistr(Message) {
     console.log(Message);
 
     let card_val = Message[0] == 11 ? 1 : Message[0];
-    Game.take_card(1, card_val);
+    Game.take_card(1, card_val, Message[1]);
 }
 
 function enemyCardDistr(Message) {
