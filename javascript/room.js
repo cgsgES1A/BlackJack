@@ -23,7 +23,7 @@ function roomConnection() {
         if (enterFlag == false) {
             socket.disconnect();
             alert("Error in room connection");
-            location.href = "room.html";
+            location.href = "room.h";
         }
         else {
             alert("You are in the game room");
@@ -78,13 +78,13 @@ function startGame(Message) {
 function endGame(Message) {
     if (Message == null || Message == undefined ||
         Message[0] == undefined || Message[1] == undefined || Message[2] == undefined ||
-        Message[0] < 0 || Message[0] > 4 || Message || Message[1].length != Message[0]) {
+        Message[0] < 0 || Message[0] > 4 || Message[1].length != Message[0]) {
         alert("Wrong message (end game)!");
         return;
     }
     console.log(`This is end game message`);
     console.log(Message);
-    finish_game(Message[0], Message[1], Message[2]);
+    Game.finish_game(Message[0], Message[1], Message[2]);
 }
 
 /*
