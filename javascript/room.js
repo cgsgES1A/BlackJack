@@ -92,14 +92,10 @@ function endGame(Message) {
  */
 
 function startUserStep(Message) {
-    if (Message == null || Message == undefined) {
-        alert("Wrong message (start user step)!");
-        return;
-    }
     console.log(`This is start user step message`);
     console.log(Message);
     /* The UI appears */
-    ;
+    Game.user_start_step();
 }
 
 function endUserStep(Message) {
@@ -110,7 +106,7 @@ function endUserStep(Message) {
     console.log(`This is end user step message`);
     console.log(Message);
     /* The UI disappears */
-    ;
+    Game.user_finish_step(Message);
 }
 
 function startEnemyStep(Message) {
