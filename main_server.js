@@ -657,6 +657,12 @@ io.on('connection', (socket) => {
         return;
     }
 
+    if (CheckBan(socket.handshake.address)) {
+        socket.emit("entersuccessful", false);
+        console.log(`User with ip: ${socket.handshake.address} was is banned!`);
+        return;
+    }
+
     try {
         let roomid = socket.handshake.query.roomid;
         let i = 0;
@@ -750,9 +756,25 @@ async function AddUser(name, pass) {
     return false;
 }
 
+function CheckBan(IP) {
+    const blacklist = ["192.168.30.3"];
+
+    let ip = IP.slice(7);
+
+    if (blacklist.indexOf(ip) != -1) {
+        return true;
+    }
+
+    return false;
+}
+
 app.post('/login', (req, res) => {
     let forwarded = req.headers['x-forwarded-for']
     let ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
+
+    if (CheckBan(ip)) {
+        return false;
+    }
 
     try {
         let data = "";
@@ -782,6 +804,10 @@ app.post('/login', (req, res) => {
 app.post('/signup', (req, res) => {
     let forwarded = req.headers['x-forwarded-for']
     let ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
+
+    if (CheckBan(ip)) {
+        return false;
+    }
 
     try {
         let data = "";
