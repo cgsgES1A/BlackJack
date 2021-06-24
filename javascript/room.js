@@ -199,7 +199,7 @@ function croupierCardDistr(Message) {
     }
     console.log(`This is croupier card message`);
     console.log(Message);
-    let card_val = Message[0] == 11 ? 1 : Message[0];
+    let card_val = Message == 11 ? 1 : Message;
     Game.take_card(6, card_val);
 }
 
