@@ -527,7 +527,7 @@ class Room {
 
             this.send_all('dealer card', k);
 
-            setTimeout(() => { this.dealer_take_card(); }, 1000 + getRandomInt(1000));
+            setTimeout(() => { this.dealer_take_card(); }, 2500 + getRandomInt(1500));
         }
         else {
             this.send_all('end dealer step', this.dealer_cards_sum);
