@@ -599,6 +599,8 @@ class Room {
                     }
                 }
 
+                tmp.push(this.dealer_cards_sum);
+
                 this.users[i].socket_send('end game', [this.users_amount - 1, tmp, all_users_score[i][1]]);
             }
         }
@@ -630,6 +632,7 @@ app.use(express.static(__dirname + '/html'));
 app.use(express.static(__dirname + '/css'));
 app.use(express.static(__dirname + '/javascript'));
 app.use(express.static(__dirname + '/images'));
+app.use(favicon(__dirname + '/images/BlackJack_03.ico'));
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
