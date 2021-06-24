@@ -109,13 +109,22 @@ export function take_card(iter, value) {
         $('#' + num_of_token_cards).css({ 'left': `${1.5 * (token_cards[iter - 1])}%` });
 }
 
-export function user_finish_step(value1, value2) {
+export function user_finish_step() {
     $("#start").prop('disabled', true);
     $("#take").prop('disabled', true);
     $("#finish").prop('disabled', true);
 }
 
 export function start_game(value1, value2, players, nicknames) {
+    let text;
+    for (var i = 1; i < players + 1; i++) {
+        text = $(`<p>${nicknames[i]}</p>`);
+        text.css({ 'top': `${15 + 15 * (i - 1)}%`, 'left': "0%" });
+        $("#axis").append(text);
+    }
+    text = $("<div><p>Dealer</p></div>");
+    text.css({ 'color': 'white', 'font-size': '20', 'top': "82px", 'left': "400px" });
+    $("#axis").append(text);
     take_card(1, value1);
     for (var j = 0; j < 2; j++)
         for (var i = 1; i < players + 1; i++)
