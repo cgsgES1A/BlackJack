@@ -659,7 +659,6 @@ io.on('connection', (socket) => {
 
     if (CheckBan(socket.handshake.address)) {
         socket.emit("entersuccessful", false);
-        console.log(`User with ip: ${socket.handshake.address} was is banned!`);
         return;
     }
 
@@ -762,6 +761,7 @@ function CheckBan(IP) {
     let ip = IP.slice(7);
 
     if (blacklist.indexOf(ip) != -1) {
+        console.log(`User with ip: ${socket.handshake.address} was is banned!`);
         return true;
     }
 
@@ -769,7 +769,7 @@ function CheckBan(IP) {
 }
 
 app.post('/login', (req, res) => {
-    let forwarded = req.headers['x-forwarded-for']
+    let forwarded = req.headers['x-forwarded-for'];
     let ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
 
     if (CheckBan(ip)) {
@@ -802,7 +802,7 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/signup', (req, res) => {
-    let forwarded = req.headers['x-forwarded-for']
+    let forwarded = req.headers['x-forwarded-for'];
     let ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
 
     if (CheckBan(ip)) {
