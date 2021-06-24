@@ -149,13 +149,14 @@ export function start_game(value1, value2, players, nicknames, points) {
     text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "67%", 'left': "5%" });
     $("#axis").append(text);
     take_card(1, value1, "");
-    for (var j = 0; j < 2; j++)
-        for (var i = 1; i < players + 1; i++)
-            take_card(i + 1);
-    take_card(6);
-    take_card(6);
-    started_flag = 1;
     setTimeout(take_card, 2000, 1, value2, points);
+    for (var i = 1, j = 2; i < players + 1; i++, j += 2) {
+        setTimeout(take_card, 2000 * (j), i + 1);
+        setTimeout(take_card, 2000 * (j + 1), i + 1);
+    }
+    setTimeout(take_card, 2000 * (j), 6);
+    setTimeout(take_card, 2000 * (j + 1), 6);
+    setTimeout(() => { started_flag = 1; }, 2000 * (j + 5));
     $("#start").prop('disabled', true);
 }
 
