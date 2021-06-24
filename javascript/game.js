@@ -115,6 +115,9 @@ export function user_start_step() {
 }
 
 export function user_finish_step(points) {
+    text = $(`<p>${points}</p>`);
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "76.5%", 'left': "2%" });
+    $("#axis").append(text);
     $("#take").prop('disabled', true);
     $("#finish").prop('disabled', true);
 }
@@ -123,11 +126,14 @@ export function start_game(value1, value2, players, nicknames) {
     let text;
     for (var i = 1; i < players + 1; i++) {
         text = $(`<p>${nicknames[i - 1]}</p>`);
-        text.css({ 'position': "absolute", 'color': 'white', 'font-size': '20', 'top': `${8.5 + 15 * (i - 1)}%`, 'left': "1.5%" });
+        text.css({ 'position': "absolute", 'color': 'white', 'font-size': '23', 'top': `${8.5 + 15 * (i - 1)}%`, 'left': "1.5%" });
         $("#axis").append(text);
     }
     text = $("<div><p>Dealer</p></div>");
     text.css({ 'position': "absolute", 'color': 'white', 'font-size': '20', 'top': "5%", 'left': "40%" });
+    $("#axis").append(text);
+    text = $(`<p>${nicknames[players]}</p>`);
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "76.5%", 'left': "7%" });
     $("#axis").append(text);
     take_card(1, value1);
     for (var j = 0; j < 2; j++)
