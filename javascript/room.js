@@ -154,7 +154,7 @@ function endCroupierStep(Message) {
     }
     console.log(`This is end croupier step message`);
     console.log(Message);
-    ;
+    Game.dealer_finish_step(Message);
 }
 
 /*
