@@ -109,7 +109,13 @@ export function take_card(iter, value) {
         $('#' + num_of_token_cards).css({ 'left': `${1.5 * (token_cards[iter - 1])}%` });
 }
 
-export function user_finish_step() {
+export function user_start_step() {
+    $("#start").prop('disabled', false);
+    $("#take").prop('disabled', false);
+    $("#finish").prop('disabled', false);
+}
+
+export function user_finish_step(points) {
     $("#start").prop('disabled', true);
     $("#take").prop('disabled', true);
     $("#finish").prop('disabled', true);
