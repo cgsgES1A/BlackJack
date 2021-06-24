@@ -23,7 +23,7 @@ function roomConnection() {
         if (enterFlag == false) {
             socket.disconnect();
             alert("Error in room connection");
-            location.href = "room.h";
+            location.href = "room.html";
         }
         else {
             alert("You are in the game room");
