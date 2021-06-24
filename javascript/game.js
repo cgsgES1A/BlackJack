@@ -8,6 +8,7 @@ var opened_user_card = 0;
 var opened_dealer_card = 0;
 var token_cards = [0, 0, 0, 0, 0, 0];
 var started_flag = 0;
+var dealer_start_cards = [];
 
 export function getRandomInt(max) {
     return Math.floor(Math.random() * max);
@@ -43,7 +44,7 @@ export function open_user_card(id, value) {
     img.attr('id', "ouc" + (max_token_card + token_cards[0]).toString());
     img.attr('src', get_image_url(value));
     img.attr('class', "object user_card multiple_temp");
-    img.css({ 'top': "80%", 'width': '100', 'left': `${(5 + 5 * (token_cards[0] - 1))}%` });
+    img.css({ 'top': "78%", 'width': '100', 'left': `${(5 + 5 * (token_cards[0] - 1))}%` });
     deck.append(img);
     $('#' + id).remove();
 }
@@ -61,20 +62,20 @@ export function open_dealer_card(id, value) {
 }
 
 export function open_dealer_start_cards(value1, value2) {
-    $("#ds1").remove();
-    $("#ds2").remove();
+    $('#' + dealer_start_cards[0].toString()).remove();
+    $('#' + dealer_start_cards[1].toString()).remove();
     deck = $("#axis");
     let img1 = $("<img></img>");
     img1.attr('id', "odc" + (max_token_card + token_cards[5] - 1).toString());
     img1.attr('src', get_image_url(value1));
     img1.attr('class', "object dealer_card multiple_temp2");
-    img1.css({ 'top': "10%", 'width': '84', 'left': `${(40 + 1.5 * (token_cards[5] - 1))}%` });
+    img1.css({ 'top': "10%", 'width': '120', 'left': `${(40 + 1.5 * (token_cards[5] - 1))}%` });
     deck.append(img1);
     let img2 = $("<img></img>");
     img2.attr('id', "odc" + (max_token_card + token_cards[5]).toString());
     img2.attr('src', get_image_url(value2));
     img2.attr('class', "object dealer_card multiple_temp3");
-    img2.css({ 'top': "10%", 'width': '84', 'left': `${(40 + 1.5 * (token_cards[5]))}%` });
+    img2.css({ 'top': "10%", 'width': '120', 'left': `${(40 + 1.5 * (token_cards[5]))}%` });
     deck.append(img2);
 }
 
@@ -85,18 +86,8 @@ export function take_card(iter, value) {
     img.attr('src', "/card_shirt.png");
     img.attr('class', "object card");
     img.css({ 'width': '120' });
-
-    if (iter > 10) {
-        if (iter == 16)
-            img.attr('id', 'ds2');
-        else
-            img.attr('id', 'ds1');
-        iter -= 10;
-    }
-    else {
-        num_of_token_cards++;
-        img.attr('id', (num_of_token_cards + 1).toString());
-    }
+    num_of_token_cards++;
+    img.attr('id', (num_of_token_cards + 1).toString());
     deck.append(img);
     var class_type = "multiple" + iter.toString();
     $('#' + num_of_token_cards).addClass(class_type);
@@ -108,7 +99,7 @@ export function take_card(iter, value) {
     }
     else if (iter == 6) {
         $('#' + num_of_token_cards).css({ 'left': `${40 + 1.5 * (token_cards[iter - 1])}%`, 'top': '10%' });
-
+        dealer_start_cards.push(num_of_token_cards);
         if (started_flag) {
             opened_dealer_card = num_of_token_cards;
             setTimeout(open_dealer_card, 2000, opened_dealer_card, value);
@@ -125,18 +116,11 @@ export function user_finish_step(value1, value2) {
 }
 
 export function start_game(value1, value2, players, nicknames) {
-    if (players == 0)
-        take_card(11, value1);
-    else
-        take_card(1, value1);
+    take_card(1, value1);
     for (var j = 0; j < 2; j++)
-        for (var i = 1; i < players + 1; i++) {
-            if (i == players - 1 && j == 1)
-                take_card(10 + i + 1);
-            else
-                take_card(i + 1);
-        }
-    take_card(16);
+        for (var i = 1; i < players + 1; i++)
+            take_card(i + 1);
+    take_card(6);
     take_card(6);
     started_flag = 1;
     setTimeout(take_card, 2000, 1, value2);
