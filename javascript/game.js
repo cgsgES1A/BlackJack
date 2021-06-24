@@ -61,8 +61,8 @@ export function open_dealer_card(id, value) {
 }
 
 export function open_dealer_start_cards(value1, value2) {
-    $("#d1").remove();
-    $("#d2").remove();
+    $("#ds1").remove();
+    $("#ds2").remove();
     deck = $("#axis");
     let img1 = $("<img></img>");
     img1.attr('id', "odc" + (max_token_card + token_cards[5] - 1).toString());
