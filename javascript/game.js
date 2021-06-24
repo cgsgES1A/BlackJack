@@ -119,11 +119,11 @@ export function start_game(value1, value2, players, nicknames) {
     let text;
     for (var i = 1; i < players + 1; i++) {
         text = $(`<p>${nicknames[i]}</p>`);
-        text.css({ 'top': `${15 + 15 * (i - 1)}%`, 'left': "0%" });
+        text.css({ 'position': "absolute", 'top': `${15 + 15 * (i - 1)}%`, 'left': "0%" });
         $("#axis").append(text);
     }
     text = $("<div><p>Dealer</p></div>");
-    text.css({ 'color': 'white', 'font-size': '20', 'top': "82px", 'left': "400px" });
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '20', 'top': "5%", 'left': "40%" });
     $("#axis").append(text);
     take_card(1, value1);
     for (var j = 0; j < 2; j++)
