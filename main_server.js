@@ -18,13 +18,13 @@ const MongoConnectionPassword = "PML_30_CGSG_FOREVER";
 const MongoConnectionURL = `mongodb+srv://${MongoConnectionProjectName}:${MongoConnectionPassword}@main.sx78q.mongodb.net/Main?retryWrites=true&w=majority`;
 
 var db = null;
-var collection = null;
+var accounts_collection = null;
 
 MongoClient.connect(MongoConnectionURL, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
     if (err) return console.log(err);
     try {
         db = client.db('Main');
-        collection = db.collection('Accounts');
+        accounts_collection = db.collection('Accounts');
         console.log("Database and collection connected succesfuly");
     }
     catch (err) {
@@ -648,7 +648,7 @@ app.get('/create_room', function (req, res) {
 
 io.on('connection', (socket) => {
     try {
-        console.log(`${socket.handshake.query.name} connected. id: ${socket.id}`);
+        console.log(`${socket.handshake.query.name} connected. IP: ${socket.handshake.address} id: ${socket.id}`);
     }
     catch (err) {
         console.log("Error");
@@ -706,14 +706,14 @@ function SocketStdDisconnect(socket) {
 }
 
 async function CheckLogin(name, pass) {
-    if (collection == null) {
+    if (accounts_collection == null) {
         return false;
     }
 
     try {
-        let user = await collection.findOne({ name: name });
+        let user = await accounts_collection.findOne({ name: name });
 
-        if (user == null) {
+        if (user == null || user.pass == -1) {
             return false;
         }
 
@@ -736,11 +736,11 @@ async function AddUser(name, pass) {
     }
 
     try {
-        if (!(await collection.findOne({ name: name }) == null)) {
+        if (!(await accounts_collection.findOne({ name: name }) == null)) {
             return false;
         }
 
-        collection.insertOne({ name: name, pass: Encrypt(pass) });
+        accounts_collection.insertOne({ name: name, pass: Encrypt(pass) });
         return true;
     }
     catch (err) {
@@ -751,6 +751,9 @@ async function AddUser(name, pass) {
 }
 
 app.post('/login', (req, res) => {
+    let forwarded = req.headers['x-forwarded-for']
+    let ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
+
     try {
         let data = "";
         req.on('data', chunk => {
@@ -760,7 +763,7 @@ app.post('/login', (req, res) => {
             try {
                 let msg = JSON.parse(data);
                 CheckLogin(msg.name, msg.password).then(data => {
-                    console.log(`Login try: name: ${msg.name}, pass(hash): ${msg.password}. Result: ${data}`);
+                    console.log(`Login try: name: ${msg.name}, pass(hash): ${msg.password}. IP: ${ip} Result: ${data}`);
                     res.writeHead(200);
                     res.end(data.toString());
                 });
@@ -777,6 +780,9 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/signup', (req, res) => {
+    let forwarded = req.headers['x-forwarded-for']
+    let ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
+
     try {
         let data = "";
         req.on('data', chunk => {
@@ -786,7 +792,7 @@ app.post('/signup', (req, res) => {
             try {
                 let msg = JSON.parse(data);
                 AddUser(msg.name, msg.password).then(data => {
-                    console.log(`Sign up try: name: ${msg.name}, pass(hash): ${msg.password}. Result: ${data}`);
+                    console.log(`Sign up try: name: ${msg.name}, pass(hash): ${msg.password}. IP: ${ip} Result: ${data}`);
                     res.writeHead(200);
                     res.end(data.toString());
                 });
