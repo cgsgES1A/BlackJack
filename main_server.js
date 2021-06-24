@@ -559,20 +559,25 @@ class Room {
                     }
                 }
 
-                if (sum == 21) {
-                    flag = true;
-                }
-                else if (sum < this.dealer_cards_sum && this.dealer_cards_sum <= 21) { }
-                else if (sum < 21) {
-                    let tmp = true;
-                    for (let j = 0; j < users_score.length; j += 1) {
-                        if (users_score[j] <= 21 && users_score[j] > sum) {
-                            tmp = false;
-                            break;
-                        }
+                if (this.users_amount > 0) {
+                    if (sum == 21) {
+                        flag = true;
                     }
+                    else if (sum < this.dealer_cards_sum && this.dealer_cards_sum <= 21) { }
+                    else if (sum < 21) {
+                        let tmp = true;
+                        for (let j = 0; j < users_score.length; j += 1) {
+                            if (users_score[j] <= 21 && users_score[j] > sum) {
+                                tmp = false;
+                                break;
+                            }
+                        }
 
-                    flag = tmp;
+                        flag = tmp;
+                    }
+                }
+                else if ((sum >= this.dealer_cards_sum && sum < 21) || sum == 21) {
+                    flag == true;
                 }
 
                 all_users_score[i] = [all_users_score[i], flag];
