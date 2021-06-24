@@ -119,7 +119,7 @@ export function start_game(value1, value2, players, nicknames) {
     let text;
     for (var i = 1; i < players + 1; i++) {
         text = $(`<p>${nicknames[i - 1]}</p>`);
-        text.css({ 'position': "absolute", 'color': 'white', 'font-size': '20', 'top': `${8.5 + 15 * (i - 1)}%`, 'left': "0%" });
+        text.css({ 'position': "absolute", 'color': 'white', 'font-size': '20', 'top': `${8.5 + 15 * (i - 1)}%`, 'left': "1.5%" });
         $("#axis").append(text);
     }
     text = $("<div><p>Dealer</p></div>");
