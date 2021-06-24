@@ -81,14 +81,14 @@ export function open_dealer_start_cards(value1, value2) {
 
 export function points_view(points) {
     let text = $(`<p>${points}</p>`);
-    text.attr('id', "pnts" + token_cards[0]);
+    text.attr('id', "pnts" + token_cards[0].toString());
     text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "67%", 'left': "2%" });
-    $("#pnts" + token_cards[0] - 1).remove();
+    $("#pnts" + (token_cards[0] - 1).toString()).remove();
     $("#axis").append(text);
 }
 
 export function take_card(iter, value, points) {
-    token_cards[iter - 1] += 1;
+    token_cards[iter - 1]++;
     deck = $("#axis");
     let img = $("<img></img>");
     img.attr('src', "/card_shirt.png");
@@ -142,19 +142,19 @@ export function start_game(value1, value2, players, nicknames, points) {
     text = $(`<p>${nicknames[players]}</p>`);
     text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "67%", 'left': "5%" });
     $("#axis").append(text);
-    take_card(1, value1);
+    take_card(1, value1, "");
     for (var j = 0; j < 2; j++)
         for (var i = 1; i < players + 1; i++)
             take_card(i + 1);
     take_card(6);
     take_card(6);
     started_flag = 1;
-    setTimeout(take_card, 2000, 1, value2);
-    setTimeout(points_view, 2000, points);
+    setTimeout(take_card, 2000, 1, value2, points);
     $("#start").prop('disabled', true);
 }
 
 export function finish_game(players, results, is_win) {
+    alert(results);
     let text;
     for (var i = 1; i < players + 1; i++) {
         text = $(`<p>${results[i - 1][0]}</p>`);
