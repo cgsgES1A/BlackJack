@@ -79,7 +79,7 @@ function startGame(Message) {
 function endGame(Message) {
     if (Message == null || Message == undefined ||
         Message[0] == undefined || Message[1] == undefined || Message[2] == undefined ||
-        Message[0] < 0 || Message[0] > 4 || Message[1].length != Message[0]) {
+        Message[0] < 0 || Message[0] > 4) {
         alert("Wrong message (end game)!");
         return;
     }
