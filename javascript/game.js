@@ -82,7 +82,7 @@ export function open_dealer_start_cards(value1, value2) {
 export function points_view(points) {
     let text = $(`<p>${points}</p>`);
     text.attr('id', "pnts" + token_cards[0].toString());
-    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "67%", 'left': "2%" });
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '30', 'top': "67%", 'left': "2%" });
     $("#pnts" + (token_cards[0] - 1).toString()).remove();
     $("#axis").append(text);
 }
@@ -129,6 +129,12 @@ export function user_finish_step(points) {
     $("#finish").prop('disabled', true);
 }
 
+export function dealer_finish_step(points) {
+    let text = $(`<p>${points}</p>`);
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "6%", 'left': "43%" });
+    $("#axis").append(text);
+}
+
 export function start_game(value1, value2, players, nicknames, points) {
     let text;
     for (var i = 1; i < players + 1; i++) {
@@ -137,7 +143,7 @@ export function start_game(value1, value2, players, nicknames, points) {
         $("#axis").append(text);
     }
     text = $("<p>Dealer</p>");
-    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '20', 'top': "6%", 'left': "45%" });
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '23', 'top': "6%", 'left': "45%" });
     $("#axis").append(text);
     text = $(`<p>${nicknames[players]}</p>`);
     text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "67%", 'left': "5%" });
@@ -154,16 +160,12 @@ export function start_game(value1, value2, players, nicknames, points) {
 }
 
 export function finish_game(players, results, is_win) {
-    alert(results);
     let text;
     for (var i = 1; i < players + 1; i++) {
         text = $(`<p>${results[i - 1][0]}</p>`);
-        text.css({ 'position': "absolute", 'color': 'white', 'font-size': '23', 'top': `${8.5 + 15 * (i - 1)}%`, 'left': "1.5%" });
+        text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': `${8.5 + 15 * (i - 1)}%`, 'left': "1.5%" });
         $("#axis").append(text);
     }
-    text = $(`<p>${results[players][0]}</p>`);
-    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '20', 'top': "6%", 'left': "43%" });
-    $("#axis").append(text);
     if (is_win)
         alert("YOU WIN!!!");
     else
