@@ -110,13 +110,11 @@ export function take_card(iter, value) {
 }
 
 export function user_start_step() {
-    $("#start").prop('disabled', false);
     $("#take").prop('disabled', false);
     $("#finish").prop('disabled', false);
 }
 
 export function user_finish_step(points) {
-    $("#start").prop('disabled', true);
     $("#take").prop('disabled', true);
     $("#finish").prop('disabled', true);
 }
@@ -139,6 +137,7 @@ export function start_game(value1, value2, players, nicknames) {
     take_card(6);
     started_flag = 1;
     setTimeout(take_card, 2000, 1, value2);
+    $("#start").prop('disabled', true);
 }
 
 export function finish_game(players, results, is_win) {
