@@ -59,7 +59,7 @@ function SocketCallbackInit() {
 
 function startGame(Message) {
     if (Message == null || Message == undefined ||
-        Message[0] == undefined || Message[1] == undefined || Message[2] == undefined ||
+        Message[0] == undefined || Message[1] == undefined || Message[2] == undefined || Message[3] == undefined ||
         Message.length < 3 || Message[0].length != 2 ||
         Message[1].length != undefined || Message[1] < 0 || Message[1] > 4 || Message[2].length != Message[1]) {
         alert("Wrong message (start game)!");
@@ -73,7 +73,7 @@ function startGame(Message) {
 
     Message[2].push(Cookies.get("userName"));
     /* Distribute two cards to every player */
-    Game.start_game(card_val1, card_val2, Message[1], Message[2]);
+    Game.start_game(card_val1, card_val2, Message[1], Message[2], Message[3]);
 }
 
 function endGame(Message) {
