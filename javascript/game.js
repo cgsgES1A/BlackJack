@@ -79,7 +79,13 @@ export function open_dealer_start_cards(value1, value2) {
     deck.append(img2);
 }
 
-export function take_card(iter, value) {
+export function points_view(points) {
+    let text = $(`<p>${points}</p>`);
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "68.5%", 'left': "2%" });
+    $("#axis").append(text);
+}
+
+export function take_card(iter, value, points) {
     token_cards[iter - 1] += 1;
     deck = $("#axis");
     let img = $("<img></img>");
@@ -96,6 +102,7 @@ export function take_card(iter, value) {
         $('#' + num_of_token_cards).css({ 'left': `${5 + 5 * (token_cards[0] - 1)}%` });
         opened_user_card = num_of_token_cards;
         setTimeout(open_user_card, 2000, opened_user_card, value);
+        setTimeout(points_view, 2000, points);
     }
     else if (iter == 6) {
         $('#' + num_of_token_cards).css({ 'left': `${40 + 1.5 * (token_cards[iter - 1])}%`, 'top': '10%' });
@@ -115,9 +122,7 @@ export function user_start_step() {
 }
 
 export function user_finish_step(points) {
-    text = $(`<p>${points}</p>`);
-    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "76.5%", 'left': "2%" });
-    $("#axis").append(text);
+    setTimeout(points_view, 2000, points);
     $("#take").prop('disabled', true);
     $("#finish").prop('disabled', true);
 }
@@ -126,14 +131,14 @@ export function start_game(value1, value2, players, nicknames) {
     let text;
     for (var i = 1; i < players + 1; i++) {
         text = $(`<p>${nicknames[i - 1]}</p>`);
-        text.css({ 'position': "absolute", 'color': 'white', 'font-size': '23', 'top': `${8.5 + 15 * (i - 1)}%`, 'left': "1.5%" });
+        text.css({ 'position': "absolute", 'color': 'white', 'font-size': '23', 'top': `${8.5 + 15 * (i - 1)}%`, 'left': "3%" });
         $("#axis").append(text);
     }
-    text = $("<div><p>Dealer</p></div>");
-    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '20', 'top': "5%", 'left': "40%" });
+    text = $("<p>Dealer</p>");
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '20', 'top': "6%", 'left': "45%" });
     $("#axis").append(text);
     text = $(`<p>${nicknames[players]}</p>`);
-    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "76.5%", 'left': "7%" });
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "68.5%", 'left': "5%" });
     $("#axis").append(text);
     take_card(1, value1);
     for (var j = 0; j < 2; j++)
@@ -147,7 +152,15 @@ export function start_game(value1, value2, players, nicknames) {
 }
 
 export function finish_game(players, results, is_win) {
-    alert(results.join('\n'));
+    let text;
+    for (var i = 1; i < players + 1; i++) {
+        text = $(`<p>${results[i - 1][0]}</p>`);
+        text.css({ 'position': "absolute", 'color': 'white', 'font-size': '23', 'top': `${8.5 + 15 * (i - 1)}%`, 'left': "1.5%" });
+        $("#axis").append(text);
+    }
+    text = $(`<p>${results[players][0]}</p>`);
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '20', 'top': "6%", 'left': "43%" });
+    $("#axis").append(text);
     if (is_win)
         alert("YOU WIN!!!");
     else
