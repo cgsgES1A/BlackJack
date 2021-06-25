@@ -202,6 +202,8 @@ class Room {
     dealer_cards_sum = 0;
     creation_time = 0;
 
+    game_start_users_amount = 0;
+
     getid() {
         return this.id;
     }
@@ -314,6 +316,7 @@ class Room {
 
         this.users = new_list;
         this.users_amount = j;
+        this.game_start_users_amount = j;
 
         if (this.users_amount == 0) {
             console.error("Unexpected error!");
@@ -377,7 +380,7 @@ class Room {
                 }
             }
 
-            for (let i = 0; i < this.users_amount; i += 1) {
+            for (let i = 0; i < this.game_start_users_amount; i += 1) {
                 if (this.users[i] == -1) {
                     continue;
                 }
@@ -397,13 +400,13 @@ class Room {
         }
 
         this.curuser += 1;
-        if (this.curuser >= this.users_amount) {
+        if (this.curuser >= this.game_start_users_amount) {
             this.step = 2;
             setTimeout(() => { this.dealer_step_start(); }, 2000);
             return;
         }
         else {
-            for (let i = 0; i < this.users_amount; i += 1) {
+            for (let i = 0; i < this.game_start_users_amount; i += 1) {
                 if (this.users[i] == -1) {
                     continue;
                 }
@@ -426,7 +429,11 @@ class Room {
         let user = this.users[i];
 
         try {
-            if (user == -1 || user.cardsum() >= 21) {
+            if (user == -1) {
+                this.next_user();
+                return;
+            }
+            if (user.cardsum() >= 21) {
                 this.users[i].socket_send('end user step', user.cardsum());
                 this.next_user();
                 return;
@@ -444,10 +451,11 @@ class Room {
             console.error(err);
         }
 
-        this.users[i].socket_get('take card', () => {
+        user.socket_get('take card', () => {
             if (this.curuser != i) {
                 return;
             }
+
             try {
                 let k = Cards[getRandomInt(Cards.length)];
                 let flag = user.addcard(k);
@@ -464,10 +472,11 @@ class Room {
             }
         });
 
-        this.users[this.curuser].socket_get('end step', () => {
+        user.socket_get('end step', () => {
             if (this.curuser != i) {
                 return;
             }
+
             user.socket_send('end user step', user.cardsum());
             this.next_user_if(i);
         });
@@ -475,15 +484,17 @@ class Room {
         let socket = this.users[i].get_socket();
         this.users[i].socket_get('disconnect', () => {
             if (this.curuser == i) {
+                console.log(`User ${i} disconnected with changing step`);
                 this.next_user();
             }
             this.deluser(socket.id);
             SocketStdDisconnect(socket);
         });
+
     }
 
     player_got_card(i) {
-        for (let j = 0; j < this.users_amount; j += 1) {
+        for (let j = 0; j < this.game_start_users_amount; j += 1) {
             if (this.users[j] == -1) {
                 continue;
             }
@@ -576,7 +587,7 @@ class Room {
     end_game() {
         let all_users_score = [-1, -1, -1, -1, -1];
 
-        for (let j = 0; j < this.users_amount; j += 1) {
+        for (let j = 0; j < this.game_start_users_amount; j += 1) {
             if (this.users[j] != -1) {
                 all_users_score[j] = this.users[j].cardsum();
             }
@@ -584,20 +595,20 @@ class Room {
 
         let dealer_flag = true;
 
-        for (let i = 0; i < this.users_amount; i += 1) {
+        for (let i = 0; i < this.game_start_users_amount; i += 1) {
             if (all_users_score[i] > this.dealer_cards_sum && all_users_score[i] <= 21) {
                 dealer_flag = false;
                 break;
             }
         }
 
-        for (let i = 0; i < this.users_amount; i += 1) {
+        for (let i = 0; i < this.game_start_users_amount; i += 1) {
             if (this.users[i] != -1) {
                 let sum = all_users_score[i];
                 let flag = false;
                 let users_score = [];
 
-                for (let j = 0; j < this.users_amount; j += 1) {
+                for (let j = 0; j < this.game_start_users_amount; j += 1) {
                     if (all_users_score[j] != -1 && j != i) {
                         if (typeof all_users_score[j] == 'object') {
                             users_score.push(all_users_score[j][0]);
@@ -608,7 +619,7 @@ class Room {
                     }
                 }
 
-                if (this.users_amount > 0) {
+                if (this.game_start_users_amount > 0) {
                     if (sum == 21) {
                         flag = true;
                     }
@@ -633,11 +644,11 @@ class Room {
             }
         }
 
-        for (let i = 0; i < this.users_amount; i += 1) {
+        for (let i = 0; i < this.game_start_users_amount; i += 1) {
             if (this.users[i] != -1) {
                 let tmp = [];
 
-                for (let j = 0; j < this.users_amount; j += 1) {
+                for (let j = 0; j < this.game_start_users_amount; j += 1) {
                     if (i != j) {
                         tmp.push(all_users_score[j]);
                     }
@@ -645,7 +656,7 @@ class Room {
 
                 tmp.push([this.dealer_cards_sum, dealer_flag]);
 
-                this.users[i].socket_send('end game', [this.users_amount - 1, tmp, all_users_score[i][1]]);
+                this.users[i].socket_send('end game', [this.game_start_users_amount - 1, tmp, all_users_score[i][1]]);
             }
         }
 
