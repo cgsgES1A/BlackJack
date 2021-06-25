@@ -3,10 +3,11 @@ import * as $ from 'jquery';
 import { io, Socket } from 'socket.io-client';
 const Cookies = require('js-cookie');
 const md5 = require("md5");
+const sha256 = require("sha256");
 
 function logupUser() {
     let name = $("#input_name").val();
-    let password = md5($("#input_password").val());
+    let password = sha256.x2($("#input_password").val() + md5(name));
 
     if (!(name == null) && !(password == null) && !(name == undefined) && !(password == undefined) && name.length > 0 && password.length > 0) {
         fetch('/signup', {
@@ -35,7 +36,7 @@ function logupUser() {
 
 function loginUser() {
     let name = $("#input_name").val();
-    let password = md5($("#input_password").val());
+    let password = sha256.x2($("#input_password").val() + md5(name));
     let isOkName = true, isOkPassword = true;
 
     if (name == null || name == undefined || name.length == 0) {
