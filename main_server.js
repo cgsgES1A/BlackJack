@@ -355,7 +355,7 @@ class Room {
 
         this.curuser = -1;
 
-        this.next_user();
+        setTimeout(() => { this.next_user(); }, this.users_amount * 4000 + 4000);
     }
 
     next_user() {
@@ -505,7 +505,7 @@ class Room {
 
         this.send_all('start dealer step', [c1, c2]);
 
-        setTimeout(() => { this.dealer_take_card(); }, 1000 + getRandomInt(1000));
+        setTimeout(() => { this.dealer_take_card(); }, 2000 + getRandomInt(1500));
     }
 
     dealer_take_card() {
@@ -522,7 +522,22 @@ class Room {
             this.dealer_cards[i] = 1;
         }
 
-        if (this.dealer_cards_sum < 17) {
+        let TakeFlag = false;
+
+        if (this.dealer_cards_sum <= 11) {
+            TakeFlag = true;
+        }
+        else if (this.dealer_cards_sum >= 17) {
+            TakeFlag = false;
+        }
+        else {
+            const RndArr = [90, 75, 60, 40, 30];
+
+            TakeFlag = (getRandomInt(100) < (RndArr[this.dealer_cards_sum - 12] * (this.dealer_cards.indexOf(11) == -1 ? 1 : 1.47)));
+        }
+
+        if (TakeFlag) {
+
             let k = Cards[getRandomInt(Cards.length)];
 
             this.dealer_cards_sum += k;
@@ -544,6 +559,15 @@ class Room {
         for (let j = 0; j < this.users_amount; j += 1) {
             if (this.users[j] != -1) {
                 all_users_score[j] = this.users[j].cardsum();
+            }
+        }
+
+        let dealer_flag = true;
+
+        for (let i = 0; i < this.users_amount; i += 1) {
+            if (all_users_score[i] > this.dealer_cards_sum && all_users_score[i] <= 21) {
+                dealer_flag = false;
+                break;
             }
         }
 
@@ -599,7 +623,7 @@ class Room {
                     }
                 }
 
-                tmp.push(this.dealer_cards_sum);
+                tmp.push([this.dealer_cards_sum, dealer_flag]);
 
                 this.users[i].socket_send('end game', [this.users_amount - 1, tmp, all_users_score[i][1]]);
             }
@@ -611,13 +635,17 @@ class Room {
 
 function RoomCleaner() {
     let forDel = [];
+    let tmp = rooms.length;
+
+    if (tmp == 0) {
+        return;
+    }
+
     rooms.forEach((val, i) => {
         if (val.is_del_time()) {
             forDel.push(i);
         }
     });
-
-    let tmp = rooms.length;
 
     for (let i = forDel.length - 1; i >= 0; i -= 1) {
         rooms[forDel[i]].send_all('disconnect_user', 0);
@@ -648,16 +676,11 @@ app.get('/create_room', function (req, res) {
 
 io.on('connection', (socket) => {
     try {
-        console.log(`${socket.handshake.query.name} connected. IP: ${socket.handshake.address} id: ${socket.id}`);
+        console.log(`${socket.handshake.query.name} connected. id: ${socket.id}`);
     }
     catch (err) {
         console.log("Error");
         console.error(err);
-        socket.emit("entersuccessful", false);
-        return;
-    }
-
-    if (CheckBan(socket.handshake.address)) {
         socket.emit("entersuccessful", false);
         return;
     }
@@ -755,27 +778,7 @@ async function AddUser(name, pass) {
     return false;
 }
 
-function CheckBan(IP) {
-    const blacklist = ["192.168.30.3"];
-
-    let ip = IP.slice(7);
-
-    if (blacklist.indexOf(ip) != -1) {
-        console.log(`User with ip: ${socket.handshake.address} was is banned!`);
-        return true;
-    }
-
-    return false;
-}
-
 app.post('/login', (req, res) => {
-    let forwarded = req.headers['x-forwarded-for'];
-    let ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
-
-    if (CheckBan(ip)) {
-        return false;
-    }
-
     try {
         let data = "";
         req.on('data', chunk => {
@@ -785,7 +788,7 @@ app.post('/login', (req, res) => {
             try {
                 let msg = JSON.parse(data);
                 CheckLogin(msg.name, msg.password).then(data => {
-                    console.log(`Login try: name: ${msg.name}, pass(hash): ${msg.password}. IP: ${ip} Result: ${data}`);
+                    console.log(`Login try: name: ${msg.name}, pass(hash): ${msg.password}. Result: ${data}`);
                     res.writeHead(200);
                     res.end(data.toString());
                 });
@@ -802,13 +805,6 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/signup', (req, res) => {
-    let forwarded = req.headers['x-forwarded-for'];
-    let ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
-
-    if (CheckBan(ip)) {
-        return false;
-    }
-
     try {
         let data = "";
         req.on('data', chunk => {
@@ -818,7 +814,7 @@ app.post('/signup', (req, res) => {
             try {
                 let msg = JSON.parse(data);
                 AddUser(msg.name, msg.password).then(data => {
-                    console.log(`Sign up try: name: ${msg.name}, pass(hash): ${msg.password}. IP: ${ip} Result: ${data}`);
+                    console.log(`Sign up try: name: ${msg.name}, pass(hash): ${msg.password}. Result: ${data}`);
                     res.writeHead(200);
                     res.end(data.toString());
                 });
