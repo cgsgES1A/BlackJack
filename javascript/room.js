@@ -24,10 +24,10 @@ function roomConnection() {
             socket.disconnect();
             alert("Error in room connection");
             location.href = "room.html";
-            Game.room_create(Cookies.get("roomId"));
         }
         else {
             alert("You are in the game room");
+            Game.room_create(Cookies.get("roomId"));
             SocketCallbackInit();
         }
     });
