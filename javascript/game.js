@@ -156,7 +156,7 @@ export function start_game(value1, value2, players, nicknames, points) {
     }
     setTimeout(take_card, 2000 * (j), 6);
     setTimeout(take_card, 2000 * (j + 1), 6);
-    setTimeout(() => { started_flag = 1; }, 2000 * (j + 5));
+    setTimeout(() => { started_flag = 1; }, 2000 * (j + 2));
     $("#start").prop('disabled', true);
 }
 
@@ -167,8 +167,13 @@ export function finish_game(players, results, is_win) {
         text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': `${8.5 + 15 * (i - 1)}%`, 'left': "1.5%" });
         $("#axis").append(text);
     }
-    if (is_win)
-        alert("YOU WIN!!!");
-    else
-        alert("Don't worry:)");
+    let info = $(`<p>${is_win ? "YOU WIN!" : "Don't worry :)"}</p><a href="#" class="close2">Close</a>`);
+    $("#window2").append(info);
+    $(location).attr('href', "#dark2");
+}
+
+export function room_create(id) {
+    text = $(`<p>Room id: ${id}</p>`);
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '20', 'top': "2%", 'left': "2%" });
+    $("#axis").append(text);
 }
