@@ -12,7 +12,6 @@ function roomConnection() {
     let userName = Cookies.get('userName');
     let roomId = Cookies.get('roomId');
 
-    alert(`Room Id: ${roomId}\nUser name: ${userName}`);
     if (userName == null || userName == undefined || roomId == null || roomId == undefined) {
         alert("Error in room connection (not enough data to login)");
         location.href = "room.html";
@@ -26,7 +25,6 @@ function roomConnection() {
             location.href = "room.html";
         }
         else {
-            alert("You are in the game room");
             Game.room_create(Cookies.get("roomId"));
             SocketCallbackInit();
         }
@@ -35,7 +33,6 @@ function roomConnection() {
 
 function disconnectUser() {
     socket.disconnect();
-    alert("User disconnect");
     location.href = "room.html";
 }
 
@@ -63,7 +60,7 @@ function startGame(Message) {
         Message[0] == undefined || Message[1] == undefined || Message[2] == undefined || Message[3] == undefined ||
         Message.length < 3 || Message[0].length != 2 ||
         Message[1].length != undefined || Message[1] < 0 || Message[1] > 4 || Message[2].length != Message[1]) {
-        alert("Wrong message (start game)!");
+        console.log("Wrong message (start game)!");
         return;
     }
     console.log(`This is start game message`);
@@ -81,7 +78,7 @@ function endGame(Message) {
     if (Message == null || Message == undefined ||
         Message[0] == undefined || Message[1] == undefined || Message[2] == undefined ||
         Message[0] < 0 || Message[0] > 4) {
-        alert("Wrong message (end game)!");
+        console.log("Wrong message (end game)!");
         return;
     }
     console.log(`This is end game message`);
@@ -102,7 +99,7 @@ function startUserStep(Message) {
 
 function endUserStep(Message) {
     if (Message == null || Message == undefined) {
-        alert("Wrong message (end user step)!");
+        console.log("Wrong message (end user step)!");
         return;
     }
     console.log(`This is end user step message`);
@@ -114,7 +111,7 @@ function endUserStep(Message) {
 function startEnemyStep(Message) {
     if (Message == null || Message == undefined ||
         Message < 0 || Message > 3) {
-        alert("Wrong message (start player step)!");
+        console.log("Wrong message (start player step)!");
         return;
     }
     console.log(`This is start player step message`);
@@ -123,7 +120,7 @@ function startEnemyStep(Message) {
 
 function endEnemyStep(Message) {
     if (Message == null || Message == undefined) {
-        alert("Wrong message (end player step)!");
+        console.log("Wrong message (end player step)!");
         return;
     }
     console.log(`This is end player step message`);
@@ -136,7 +133,7 @@ function startCroupierStep(Message) {
         Message[0] == undefined || Message[1] == undefined ||
         Message[0].length != undefined || Message[1].length != undefined ||
         Message[0] < 2 || Message[0] > 11 || Message[1] < 2 || Message[1] > 11) {
-        alert("Wrong message (start croupier step)!");
+        console.log("Wrong message (start croupier step)!");
         return;
     }
     console.log(`This is start croupier step message`);
@@ -150,7 +147,7 @@ function startCroupierStep(Message) {
 
 function endCroupierStep(Message) {
     if (Message == null || Message == undefined) {
-        alert("Wrong message (end croupier step)!");
+        console.log("Wrong message (end croupier step)!");
         return;
     }
     console.log(`This is end croupier step message`);
@@ -166,9 +163,7 @@ function userCardDistr(Message) {
     if (Message == null || Message == undefined ||
         Message[0] == undefined || Message[1] == undefined ||
         Message[0] < 2 || Message[0] > 11) {
-        console.log(`This is user card message`);
-        alert("Wrong message (user card)!");
-        console.log(Message);
+        console.log("Wrong message (user card)!");
         return;
     }
     console.log(`This is user card message`);
@@ -181,7 +176,7 @@ function userCardDistr(Message) {
 function enemyCardDistr(Message) {
     if (Message == null || Message == undefined ||
         Message < 0 || Message > 3) {
-        alert("Wrong message (player card)!");
+        console.log("Wrong message (player card)!");
         return;
     }
     console.log(`This is player card message`);
@@ -192,7 +187,7 @@ function enemyCardDistr(Message) {
 function croupierCardDistr(Message) {
     if (Message == null || Message == undefined ||
         Message < 2 || Message > 11) {
-        alert("Wrong message (croupier card)!");
+        console.log("Wrong message (croupier card)!");
         return;
     }
     console.log(`This is croupier card message`);
