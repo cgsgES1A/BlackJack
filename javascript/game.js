@@ -89,7 +89,7 @@ export function points_view(points) {
 }
 
 export function free_buttons() {
-    if (!finish_flag) {
+    if (!finish_flag && started_flag) {
         $("#take").prop('disabled', false);
         $("#finish").prop('disabled', false);
     }
