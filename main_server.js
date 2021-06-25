@@ -378,11 +378,20 @@ class Room {
             }
 
             for (let i = 0; i < this.users_amount; i += 1) {
-                if (i > this.curuser) {
-                    this.users[i].socket_send('end player step', this.curuser);
+                if (this.users[i] == -1) {
+                    continue;
                 }
-                else if (i < this.curuser) {
-                    this.users[i].socket_send('end player step', this.curuser - 1);
+
+                try {
+                    if (i > this.curuser) {
+                        this.users[i].socket_send('end player step', this.curuser);
+                    }
+                    else if (i < this.curuser) {
+                        this.users[i].socket_send('end player step', this.curuser - 1);
+                    }
+                }
+                catch (err) {
+                    console.error(err);
                 }
             }
         }
@@ -395,19 +404,26 @@ class Room {
         }
         else {
             for (let i = 0; i < this.users_amount; i += 1) {
-                if (i > this.curuser) {
-                    this.users[i].socket_send('start player step', this.curuser);
+                if (this.users[i] == -1) {
+                    continue;
                 }
-                else if (i < this.curuser) {
-                    this.users[i].socket_send('start player step', this.curuser - 1);
+
+                try {
+                    if (i > this.curuser) {
+                        this.users[i].socket_send('start player step', this.curuser);
+                    }
+                    else if (i < this.curuser) {
+                        this.users[i].socket_send('start player step', this.curuser - 1);
+                    }
+                }
+                catch (err) {
+                    console.error(err);
                 }
             }
         }
 
         let i = this.curuser;
         let user = this.users[i];
-
-        this.users[i].socket_send('start user step', 0);
 
         try {
             if (user == -1 || user.cardsum() >= 21) {
@@ -421,18 +437,30 @@ class Room {
             this.next_user();
         }
 
+        try {
+            this.users[i].socket_send('start user step', 0);
+        }
+        catch (err) {
+            console.error(err);
+        }
+
         this.users[i].socket_get('take card', () => {
             if (this.curuser != i) {
                 return;
             }
-            let k = Cards[getRandomInt(Cards.length)];
-            let flag = user.addcard(k);
-            user.socket_send('user card', [k, user.cardsum()]);
-            this.player_got_card(i);
+            try {
+                let k = Cards[getRandomInt(Cards.length)];
+                let flag = user.addcard(k);
+                user.socket_send('user card', [k, user.cardsum()]);
+                this.player_got_card(i);
 
-            if (flag == false) {
-                user.socket_send('end user step', user.cardsum());
-                this.next_user_if(i);
+                if (flag == false) {
+                    user.socket_send('end user step', user.cardsum());
+                    this.next_user_if(i);
+                }
+            }
+            catch (err) {
+                console.error(err);
             }
         });
 
@@ -456,6 +484,10 @@ class Room {
 
     player_got_card(i) {
         for (let j = 0; j < this.users_amount; j += 1) {
+            if (this.users[j] == -1) {
+                continue;
+            }
+
             if (j > i) {
                 this.users[j].socket_send('player card', i);
             }
@@ -747,7 +779,7 @@ async function CheckLogin(name, pass) {
 }
 
 async function AddUser(name, pass) {
-    if (collection == null) {
+    if (accounts_collection == null) {
         return false;
     }
 
@@ -822,4 +854,4 @@ server.listen(3000, () => {
     console.log('listening on *:3000');
 });
 
-setInterval(() => { RoomCleaner(); }, 60 * 1000);
+setInterval(() => { RoomCleaner(); }, 1.0 * 60 * 1000);
