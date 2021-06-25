@@ -8,6 +8,7 @@ var opened_user_card = 0;
 var opened_dealer_card = 0;
 var token_cards = [0, 0, 0, 0, 0, 0];
 var started_flag = 0;
+var finish_flag = 0;
 var dealer_start_cards = [];
 
 export function getRandomInt(max) {
@@ -82,9 +83,16 @@ export function open_dealer_start_cards(value1, value2) {
 export function points_view(points) {
     let text = $(`<p>${points}</p>`);
     text.attr('id', "pnts" + token_cards[0].toString());
-    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '30', 'top': "67%", 'left': "2%" });
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '30', 'top': "66%", 'left': "2%" });
     $("#pnts" + (token_cards[0] - 1).toString()).remove();
     $("#axis").append(text);
+}
+
+export function free_buttons() {
+    if (!finish_flag) {
+        $("#take").prop('disabled', false);
+        $("#finish").prop('disabled', false);
+    }
 }
 
 export function take_card(iter, value, points) {
@@ -101,8 +109,11 @@ export function take_card(iter, value, points) {
     $('#' + num_of_token_cards).addClass(class_type);
 
     if (iter == 1) {
+        $("#take").prop('disabled', true);
+        $("#finish").prop('disabled', true);
         $('#' + num_of_token_cards).css({ 'left': `${5 + 5 * (token_cards[0] - 1)}%` });
         opened_user_card = num_of_token_cards;
+        setTimeout(free_buttons, 2000);
         setTimeout(open_user_card, 2000, opened_user_card, value);
         setTimeout(points_view, 2000, points);
     }
@@ -124,6 +135,7 @@ export function user_start_step() {
 }
 
 export function user_finish_step(points) {
+    finish_flag = 1;
     setTimeout(points_view, 2000, points);
     $("#take").prop('disabled', true);
     $("#finish").prop('disabled', true);
@@ -131,7 +143,7 @@ export function user_finish_step(points) {
 
 export function dealer_finish_step(points) {
     let text = $(`<p>${points}</p>`);
-    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "6%", 'left': "43%" });
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': "5.5%", 'left': "43%" });
     $("#axis").append(text);
 }
 
@@ -160,16 +172,20 @@ export function start_game(value1, value2, players, nicknames, points) {
     $("#start").prop('disabled', true);
 }
 
+export function winner(is_win) {
+    let info = $(`<p>${is_win ? "YOU WIN!" : "Don't worry, be happy :)"}</p><a href="/room.html" class="close2">Close</a>`);
+    $("#window2").append(info);
+    $(location).attr('href', "#dark2");
+}
+
 export function finish_game(players, results, is_win) {
     let text;
     for (var i = 1; i < players + 1; i++) {
         text = $(`<p>${results[i - 1][0]}</p>`);
-        text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': `${8.5 + 15 * (i - 1)}%`, 'left': "1.5%" });
+        text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': `${8 + 15 * (i - 1)}%`, 'left': "1.5%" });
         $("#axis").append(text);
     }
-    let info = $(`<p>${is_win ? "YOU WIN!" : "Don't worry :)"}</p><a href="/room.html" class="close2">Close</a>`);
-    $("#window2").append(info);
-    $(location).attr('href', "#dark2");
+    setTimeout(winner, 1500, is_win);
 }
 
 export function room_create(id) {

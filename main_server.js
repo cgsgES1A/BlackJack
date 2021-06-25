@@ -522,23 +522,11 @@ class Room {
             this.dealer_cards[i] = 1;
         }
 
-        let TakeFlag = false;
-
-        if (this.dealer_cards_sum <= 11) {
-            TakeFlag = true;
-        }
-        else if (this.dealer_cards_sum >= 17) {
-            TakeFlag = false;
-        }
-        else {
-            const RndArr = [90, 75, 60, 40, 30];
-
-            TakeFlag = (getRandomInt(100) < (RndArr[this.dealer_cards_sum - 12] * (this.dealer_cards.indexOf(11) == -1 ? 1 : 1.47)));
-        }
+        let TakeFlag = this.dealer_cards_sum >= 17 ? false : true;
 
         if (TakeFlag) {
-
-            let k = Cards[getRandomInt(Cards.length)];
+            const DealerRndCards = [11, 11, 11, 2, 2, 3, 3, 4, 4, 5, 6, 5, 6, 7, 8, 7, 8, 9, 10, 9, 10];
+            let k = DealerRndCards[getRandomInt(DealerRndCards.length - (21 - this.dealer_cards_sum) * 2)];
 
             this.dealer_cards_sum += k;
             this.dealer_cards.push(k);
