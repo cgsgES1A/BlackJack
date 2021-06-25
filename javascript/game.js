@@ -167,13 +167,13 @@ export function finish_game(players, results, is_win) {
         text.css({ 'position': "absolute", 'color': 'white', 'font-size': '26', 'top': `${8.5 + 15 * (i - 1)}%`, 'left': "1.5%" });
         $("#axis").append(text);
     }
-    let info = $(`<p>${is_win ? "YOU WIN!" : "Don't worry :)"}</p><a href="#" class="close2">Close</a>`);
+    let info = $(`<p>${is_win ? "YOU WIN!" : "Don't worry :)"}</p><a href="/room.html" class="close2">Close</a>`);
     $("#window2").append(info);
     $(location).attr('href', "#dark2");
 }
 
 export function room_create(id) {
-    text = $(`<p>Room id: ${id}</p>`);
-    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '20', 'top': "2%", 'left': "2%" });
+    let text = $(`<p>Room id: ${id}</p>`);
+    text.css({ 'position': "absolute", 'color': 'white', 'font-size': '20', 'top': "6px", 'right': "6px" });
     $("#axis").append(text);
 }
