@@ -36,7 +36,7 @@ function logupUser() {
 
 function loginUser() {
     let name = $("#input_name").val();
-    let password = sha256.x2($("#input_password").val() + md5(name));
+    let password = $("#input_password").val();
     let isOkName = true, isOkPassword = true;
 
     if (name == null || name == undefined || name.length == 0) {
@@ -49,6 +49,8 @@ function loginUser() {
         if (password == null || password == undefined)
             isOkPassword = false;
     }
+    else
+        password = sha256.x2($("#input_password").val() + md5(name));
 
     if (!isOkName || !isOkPassword)
         alert("Input user data to login");
@@ -73,6 +75,28 @@ function loginUser() {
                     alert("Failed to login user");
             });
     }
+}
+
+function loginCookies() {
+    let name = Cookies.get("userName");
+    let password = Cookies.get("userPassword");
+    fetch('/login', {
+        method: 'POST',
+        body: JSON.stringify({ name: name, password: password })
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Response status is: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(text => {
+            if (text == "true") {
+                location.href = "./room.html";
+            }
+            else
+                alert("Failed to login user");
+        });
 }
 
 let roomId = null;
@@ -123,7 +147,35 @@ function roomSession() {
     location.href = "game.html";
 }
 
+function addModal(text, button) {
+    $('.cover, .modal, .content').fadeIn();
+    $("#modal_text").html(text);
+    $("#modal_button").html(button);
+
+    let wrap = $('#wrapper');
+
+    wrap.on('click', function (event) {
+        var select = $('.content');
+        if ($(event.target).closest(select).length)
+            return;
+        $('.cover, .modal, .content').fadeOut();
+        wrap.unbind('click');
+        $("#modal_button").on("click", () => { return; });
+    });
+}
+
+function checkCookies() {
+    let cookiesName = Cookies.get('userName');
+    let cookiesPassword = Cookies.get('userPassword');
+
+    if (cookiesName != null && cookiesName != undefined &&
+        cookiesPassword != null && cookiesPassword != undefined)
+        addModal(`Вы можете войти на сайт под именем ${cookiesName}<br> (с использованием сохранённого пароля)`, "Login");
+    $("#modal_button").on("click", () => { loginCookies() });
+}
+
 function onLoad() {
+    checkCookies();
     $("#user_logup_button").on("click", () => { logupUser(); });
     $("#user_login_button").on("click", () => { loginUser(); });
     $("#room_logup_button").on("click", () => { logupRoom(); });
