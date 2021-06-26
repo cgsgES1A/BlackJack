@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const MongoClient = require('mongodb').MongoClient;
 const bcrypt = require("bcrypt");
 const md5 = require("md5");
+const urlShortener = require('node-url-shortener');
 
 const server = http.createServer(app);
 const { Server } = require("socket.io");
@@ -144,15 +145,15 @@ class User {
 
     socket_default() {
         try {
-            this.socket.removeAllListeners();
+            this.socket.removeAllListeners('disconnect');
 
             this.socket.on('disconnect', () => {
                 SocketStdDisconnect(this.socket);
             });
 
-            this.socket.on('take card', () => { });
-            this.socket.on('end step', () => { });
-            this.socket.on('start game', () => { });
+            this.socket.removeAllListeners('take card');
+            this.socket.removeAllListeners('end step');
+            this.socket.removeAllListeners('start game');
         }
         catch (err) {
             console.error(err);
@@ -170,6 +171,7 @@ class User {
 
     socket_get(msg_type, func) {
         try {
+            this.socket.removeAllListeners(msg_type);
             this.socket.on(msg_type, func);
         }
         catch (err) {
@@ -861,8 +863,18 @@ app.post('/signup', (req, res) => {
     return;
 });
 
-server.listen(3000, () => {
-    console.log('listening on *:3000');
+app.post('/url', function (req, res) {
+    const url = req.body.url;
+
+    urlShortener.short(url, function (err, shortUrl) {
+        res.send(shortUrl);
+    });
+});
+
+const port = process.env.PORT || 3000;
+
+server.listen(port, () => {
+    console.log(`listening on *:${port}`);
 });
 
 setInterval(() => { RoomCleaner(); }, 1.0 * 60 * 1000);
