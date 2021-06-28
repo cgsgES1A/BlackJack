@@ -142,6 +142,14 @@
             border-radius: 13px;
             height: 30px;
         }
+
+        .info {
+            color: #000;
+        }
+
+        .error {
+            color: #941f1f;
+        }
     </style>
 </head>
 
@@ -166,9 +174,8 @@
     <div id="wrapper">
         <div class="cover"></div>
         <div class="modal">
-            <div class="content">
-                <h1 id="modal_text" class="modal_text"></h1>
-                <button id="modal_button" class="modal_button">Login</button>
+            <div class="content" id="modal_inner">
+                <h1 id="modal_text" class="modal_text info"></h1>
             </div>
         </div>
     </div>

@@ -27,11 +27,11 @@ function logupUser() {
                     Cookies.set('userPassword', password);
                 }
                 else
-                    alert("Failed to register user");
+                    addModal("Не удалось зарегистрироваться", null, "Error");
             });
     }
     else
-        alert("Input user data to logup");
+        addModal("Введите данные пользователя для того чтобы зарегистрироваться", null, "Error");
 }
 
 function loginUser() {
@@ -53,10 +53,8 @@ function loginUser() {
         password = sha256.x2($("#input_password").val() + md5(name));
 
     if (!isOkName || !isOkPassword)
-        alert("Input user data to login");
+        addModal("Введите данные пользователя для того чтобы войти", null, "Error");
     else {
-        Cookies.set("userName", name);
-        Cookies.set("userPassword", password);
         fetch('/login', {
             method: 'POST',
             body: JSON.stringify({ name: name, password: password })
@@ -70,9 +68,11 @@ function loginUser() {
             .then(text => {
                 if (text == "true") {
                     location.href = "./room.html";
+                    Cookies.set("userName", name);
+                    Cookies.set("userPassword", password);
                 }
                 else
-                    alert("Failed to login user");
+                    addModal("Не удалось войти", null, "Error");
             });
     }
 }
@@ -94,8 +94,10 @@ function loginCookies() {
             if (text == "true") {
                 location.href = "./room.html";
             }
-            else
-                alert("Failed to login user");
+            else {
+                deleteModal();
+                addModal("Не удалось войти", null, "Error");
+            }
         });
 }
 
@@ -115,7 +117,7 @@ function logupRoom() {
             let tmpRoomId = text;
 
             if (tmpRoomId == null || tmpRoomId == undefined || tmpRoomId.length == 0)
-                alert("Error in room logup");
+                addModal("Ошибка в регистрации комнаты", null, "Error");
             else {
                 roomId = tmpRoomId;
                 roomSession();
@@ -127,7 +129,7 @@ function loginRoom() {
     let tmpRoomId = $("#input_room_id").val();
 
     if (tmpRoomId == null || tmpRoomId == undefined || tmpRoomId.length == 0)
-        alert("Input room data to log in room");
+        addModal("Введите Id комнаты для того чтобы войти", null, "Error");
     else {
         roomId = tmpRoomId;
         roomSession();
@@ -136,7 +138,7 @@ function loginRoom() {
 
 function roomSession() {
     if (roomId == null || roomId == undefined || roomId.length == 0) {
-        alert("Error in room connection (wrong id)");
+        addModal("Ошибка в подключении в комнату (неправельный Id)", null, "Error");
         return;
     }
     if (!Cookies.get('userName')) {
@@ -147,20 +149,35 @@ function roomSession() {
     location.href = "game.html";
 }
 
-function addModal(text, button) {
-    $('.cover, .modal, .content').fadeIn();
-    $("#modal_text").html(text);
-    $("#modal_button").html(button);
+function deleteModal() {
+    $('.cover, .modal, .content').fadeOut();
 
+    if ($("#modal_button") != null && $("#modal_button") != undefined) {
+        $("#modal_button").on("click", () => { return; });
+    }
+}
+
+function addModal(text, button, type) {
+    $("#modal_text").html(text);
+    if (button != null && button != undefined)
+        $('#modal_inner').append($(`<button id="modal_button" class="modal_button">${button}</button>`));
+    else if ($("#modal_button") != null && $("#modal_button") != undefined)
+        $("#modal_button").remove();
+    if (type == "Error") {
+        if ($("#modal_text").hasClass('info'))
+            $("#modal_text").removeClass('info');
+        $("#modal_text").addClass('error');
+    }
+    else {
+        if ($("#modal_text").hasClass('error'))
+            $("#modal_text").removeClass('error');
+        $("#modal_text").addClass('info');
+    }
+    $('.cover, .modal, .content').fadeIn();
     let wrap = $('#wrapper');
 
     wrap.on('click', function (event) {
-        var select = $('.content');
-        if ($(event.target).closest(select).length)
-            return;
-        $('.cover, .modal, .content').fadeOut();
-        wrap.unbind('click');
-        $("#modal_button").on("click", () => { return; });
+        deleteModal();
     });
 }
 
@@ -171,11 +188,14 @@ function checkCookies() {
     if (cookiesName != null && cookiesName != undefined &&
         cookiesPassword != null && cookiesPassword != undefined)
         addModal(`Вы можете войти на сайт под именем ${cookiesName}<br> (с использованием сохранённого пароля)`, "Login");
-    $("#modal_button").on("click", () => { loginCookies() });
+    $("#modal_button").on("click", () => {
+        loginCookies();
+    });
 }
 
 function onLoad() {
-    checkCookies();
+    if (window.location.href != 'http://localhost:3000/room.html')
+        checkCookies();
     $("#user_logup_button").on("click", () => { logupUser(); });
     $("#user_login_button").on("click", () => { loginUser(); });
     $("#room_logup_button").on("click", () => { logupRoom(); });

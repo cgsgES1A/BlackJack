@@ -88,6 +88,68 @@
         button:hover {
             border-color: #2691d9;
         }
+
+        .cover {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            opacity: 0.6;
+            z-index: 100;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 40%;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            text-align: center;
+            overflow-x: auto;
+            overflow-y: scroll;
+            padding: 20px;
+            z-index: 200;
+            width: 100%;
+            height: 100%;
+        }
+
+        .content {
+            display: none;
+            width: 490px;
+            position: relative;
+            background-color: #FAFAFA;
+            z-index: 300;
+            padding: 50px 0;
+            border-radius: 25px;
+            padding: 10px;
+            margin: auto;
+        }
+
+        .modal_text {
+            font-size: 19px;
+            transform: translateY(7px);
+            border-bottom: none;
+        }
+
+        .modal_button {
+            width: 70px;
+            font-size: 16px;
+            text-align: center;
+            border-radius: 13px;
+            height: 30px;
+        }
+
+        .info {
+            color: #000;
+        }
+
+        .error {
+            color: #941f1f;
+        }
     </style>
 </head>
 
@@ -102,6 +164,14 @@
             </div>
             <button id="room_login_button">Join room</button>
             <button id="room_logup_button">Create new room</button>
+        </div>
+    </div>
+    <div id="wrapper">
+        <div class="cover"></div>
+        <div class="modal">
+            <div class="content" id="modal_inner">
+                <h1 id="modal_text" class="modal_text info"></h1>
+            </div>
         </div>
     </div>
 </body>

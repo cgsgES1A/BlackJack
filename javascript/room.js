@@ -13,16 +13,16 @@ function roomConnection() {
     let roomId = Cookies.get('roomId');
 
     if (userName == null || userName == undefined || roomId == null || roomId == undefined) {
-        alert("Error in room connection (not enough data to login)");
-        location.href = "room.html";
+        addModal("Error in room connection (not enough data to login)", null, "Error");
+        setTimeout(() => { location.href = "room.html" }, 1500);
         return;
     }
     socket = io({ query: { name: userName, roomid: roomId } });
     socket.on("entersuccessful", (enterFlag) => {
         if (enterFlag == false) {
             socket.disconnect();
-            alert("Error in room connection");
-            location.href = "room.html";
+            addModal("Error in room connection", null, "Error");
+            setTimeout(() => { location.href = "room.html" }, 1500);
         }
         else {
             Game.room_create(Cookies.get("roomId"));
@@ -181,6 +181,38 @@ function takeButtonFunction() {
 
 function finishButtonFunction() {
     socket.emit("end step");
+}
+
+function deleteModal() {
+    $('.cover, .modal, .content').fadeOut();
+
+    if ($("#modal_button") != null && $("#modal_button") != undefined) {
+        $("#modal_button").on("click", () => { return; });
+    }
+}
+
+function addModal(text, button, type) {
+    $("#modal_text").html(text);
+    if (button != null && button != undefined)
+        $('#modal_inner').append($(`<button id="modal_button" class="modal_button">${button}</button>`));
+    else if ($("#modal_button") != null && $("#modal_button") != undefined)
+        $("#modal_button").remove();
+    if (type == "Error") {
+        if ($("#modal_text").hasClass('info'))
+            $("#modal_text").removeClass('info');
+        $("#modal_text").addClass('error');
+    }
+    else {
+        if ($("#modal_text").hasClass('error'))
+            $("#modal_text").removeClass('error');
+        $("#modal_text").addClass('info');
+    }
+    $('.cover, .modal, .content').fadeIn();
+    let wrap = $('#wrapper');
+
+    wrap.on('click', function (event) {
+        deleteModal();
+    });
 }
 
 function onLoad() {
