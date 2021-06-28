@@ -60,11 +60,8 @@ function startGame(Message) {
         Message[0] == undefined || Message[1] == undefined || Message[2] == undefined || Message[3] == undefined ||
         Message.length < 3 || Message[0].length != 2 ||
         Message[1].length != undefined || Message[1] < 0 || Message[1] > 4 || Message[2].length != Message[1]) {
-        console.log("Wrong message (start game)!");
         return;
     }
-    console.log(`This is start game message`);
-    console.log(Message);
 
     let card_val1 = Message[0][0] == 11 ? 1 : Message[0][0];
     let card_val2 = Message[0][1] == 11 ? 1 : Message[0][1];
@@ -78,11 +75,8 @@ function endGame(Message) {
     if (Message == null || Message == undefined ||
         Message[0] == undefined || Message[1] == undefined || Message[2] == undefined ||
         Message[0] < 0 || Message[0] > 4) {
-        console.log("Wrong message (end game)!");
         return;
     }
-    console.log(`This is end game message`);
-    console.log(Message);
     Game.finish_game(Message[0], Message[1], Message[2]);
 }
 
@@ -91,19 +85,14 @@ function endGame(Message) {
  */
 
 function startUserStep(Message) {
-    console.log(`This is start user step message`);
-    console.log(Message);
     /* The UI appears */
     Game.user_start_step();
 }
 
 function endUserStep(Message) {
     if (Message == null || Message == undefined) {
-        console.log("Wrong message (end user step)!");
         return;
     }
-    console.log(`This is end user step message`);
-    console.log(Message);
     /* The UI disappears */
     Game.user_finish_step(Message);
 }
@@ -111,20 +100,14 @@ function endUserStep(Message) {
 function startEnemyStep(Message) {
     if (Message == null || Message == undefined ||
         Message < 0 || Message > 3) {
-        console.log("Wrong message (start player step)!");
         return;
     }
-    console.log(`This is start player step message`);
-    console.log(Message);
 }
 
 function endEnemyStep(Message) {
     if (Message == null || Message == undefined) {
-        console.log("Wrong message (end player step)!");
         return;
     }
-    console.log(`This is end player step message`);
-    console.log(Message);
     /* IDK what */;
 }
 
@@ -133,11 +116,8 @@ function startCroupierStep(Message) {
         Message[0] == undefined || Message[1] == undefined ||
         Message[0].length != undefined || Message[1].length != undefined ||
         Message[0] < 2 || Message[0] > 11 || Message[1] < 2 || Message[1] > 11) {
-        console.log("Wrong message (start croupier step)!");
         return;
     }
-    console.log(`This is start croupier step message`);
-    console.log(Message);
     let card_val1, card_val2;
 
     card_val1 = Message[0] == 11 ? 1 : Message[0];
@@ -147,11 +127,8 @@ function startCroupierStep(Message) {
 
 function endCroupierStep(Message) {
     if (Message == null || Message == undefined) {
-        console.log("Wrong message (end croupier step)!");
         return;
     }
-    console.log(`This is end croupier step message`);
-    console.log(Message);
     Game.dealer_finish_step(Message);
 }
 
@@ -163,11 +140,8 @@ function userCardDistr(Message) {
     if (Message == null || Message == undefined ||
         Message[0] == undefined || Message[1] == undefined ||
         Message[0] < 2 || Message[0] > 11) {
-        console.log("Wrong message (user card)!");
         return;
     }
-    console.log(`This is user card message`);
-    console.log(Message);
 
     let card_val = Message[0] == 11 ? 1 : Message[0];
     Game.take_card(1, card_val, Message[1]);
@@ -176,22 +150,16 @@ function userCardDistr(Message) {
 function enemyCardDistr(Message) {
     if (Message == null || Message == undefined ||
         Message < 0 || Message > 3) {
-        console.log("Wrong message (player card)!");
         return;
     }
-    console.log(`This is player card message`);
-    console.log(Message);
     Game.take_card(Message + 2, -1);
 }
 
 function croupierCardDistr(Message) {
     if (Message == null || Message == undefined ||
         Message < 2 || Message > 11) {
-        console.log("Wrong message (croupier card)!");
         return;
     }
-    console.log(`This is croupier card message`);
-    console.log(Message);
     let card_val = Message == 11 ? 1 : Message;
     Game.take_card(6, card_val);
 }
