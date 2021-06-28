@@ -194,7 +194,7 @@ function checkCookies() {
 }
 
 function onLoad() {
-    if (window.location.href != 'http://localhost:3000/room.html')
+    if (window.location.pathname != '/room.html')
         checkCookies();
     $("#user_logup_button").on("click", () => { logupUser(); });
     $("#user_login_button").on("click", () => { loginUser(); });
