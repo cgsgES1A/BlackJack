@@ -16,7 +16,8 @@
     "mongodb": "^3.6.9",
     "serve-favicon": "^2.5.0",
     "socket.io": "^4.1.2",
-    "socket.io-client": "^4.1.2"
+    "socket.io-client": "^4.1.2",
+    "node-url-shortener": "^2.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",
